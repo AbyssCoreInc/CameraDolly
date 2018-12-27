@@ -49,6 +49,14 @@ class MessageBroker:
 		self.client.subscribe("CameraDolly/ControlMessage/#")
 		self.client.loop_start()
 		#self.client.subscribe("CameraDolly/ControlMessage/#")
+		try:
+			while True:
+				time.sleep(1)
+
+		except KeyboardInterrupt:
+			print "exiting"
+		client.disconnect()
+		client.loop_stop()
 		print("DataTransmitter.connect ready")
 	
 	def trasnmitdata(self,data,topic):
