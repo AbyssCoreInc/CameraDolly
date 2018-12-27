@@ -7,15 +7,6 @@ import time
 def on_log(client, userdata, level, buf):
 	print("log: ",buf)
 
-#def on_message(client, userdata, message):
-#	msg =str(message.payload.decode("utf-8"))
-#	print("message received " ,msg)
-#	print("message topic=",message.topic)
-#	print("message qos=",message.qos)
-#	print("message retain flag=",message.retain)
-#	if (msg == "start"):
-#		self.camera.running = 1
-
 class MessageBroker:
 	mqtturl = "null"
 	uname = "name"
@@ -49,15 +40,6 @@ class MessageBroker:
 		self.client.connect(self.mqtturl,port=1883)
 		self.client.subscribe("CameraDolly/ControlMessage/#")
 		self.client.loop_start()
-		#self.client.subscribe("CameraDolly/ControlMessage/#")
-		try:
-			while True:
-				time.sleep(1)
-
-		except KeyboardInterrupt:
-			print("exiting")
-		client.disconnect()
-		client.loop_stop()
 		print("DataTransmitter.connect ready")
 	
 	def trasnmitdata(self,data,topic):
@@ -66,5 +48,14 @@ class MessageBroker:
 		datastr = str(data)
 		datastr = datastr.replace("'","\"")
 		self.client.publish(topic,payload=datastr,qos=0, retain=False)
+
+	def worker(self):
+		try:
+			while True:
+				time.sleep(1)
+			except KeyboardInterrupt:
+				print("exiting")
+		self.client.disconnect()
+		self.client.loop_stop()
 #print("DataTransmitter.trasnmitdata ready")
 

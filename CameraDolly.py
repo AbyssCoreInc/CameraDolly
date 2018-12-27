@@ -29,6 +29,9 @@ def turnOffMotors():
 atexit.register(turnOffMotors)
 
 def initiateThreads(datatrans,configuration):
+	t1 = threading.Thread(target=datatrans.worker)
+	threads.append(t1)
+	t1.start()
 	print("started threads")
 
 def main():
