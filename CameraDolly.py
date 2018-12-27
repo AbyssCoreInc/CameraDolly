@@ -40,7 +40,7 @@ def main():
 	
 	myStepper1 = mh.getStepper(200, 1)      # 200 steps/rev, motor port #1
 	myStepper1.setSpeed(conf.getStepperSpeed())          # 30 RPM
-
+	
 	numsteps = conf.getStepsPerFrame()
 	images = conf.getDefaultImages()
 	
@@ -51,6 +51,8 @@ def main():
 	mBroker.connect()
 	direction = Adafruit_MotorHAT.BACKWARD
 	style = Adafruit_MotorHAT.DOUBLE
+
+	self.initiateThreads(mBroker,conf)
 
 	counter = 0
 	while (1):
