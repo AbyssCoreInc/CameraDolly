@@ -1,6 +1,6 @@
 import gphoto2 as gp
 
-class Configuration:
+class Camera:
 	def __init__(self, configuration):
 		self.config = configuration
 		self.running = 0
