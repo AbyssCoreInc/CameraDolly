@@ -53,7 +53,8 @@ class MessageBroker:
 		self.client.loop_start()
 		try:
 			while True:
-				time.sleep(0.2)
+				time.sleep(1)
+				print("blaah")
 		except KeyboardInterrupt:
 			print("exiting")
 		self.client.disconnect()
