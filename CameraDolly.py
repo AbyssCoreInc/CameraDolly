@@ -10,6 +10,7 @@ import atexit
 import threading
 import random
 from Configuration import *
+from Camera import *
 
 threads = []
 
@@ -29,19 +30,6 @@ def turnOffMotors():
 atexit.register(turnOffMotors)
 
 def initiateThreads(datatrans,configuration):
-	sm = CameraManager(configuration)
-	ds = DataObserver(datatrans,sm)
-	
-	t1 = threading.Thread(target=ds.worker)
-	threads.append(t1)
-	t1.start()
-	t2 = threading.Thread(target=sm.worker)
-	threads.append(t2)
-	t2.start()
-	
-	t3 = threading.Thread(target=sm.lora.worker)
-	threads.append(t3)
-	t3.start()
 	print("started threads")
 
 
