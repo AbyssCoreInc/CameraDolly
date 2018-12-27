@@ -1,5 +1,5 @@
 import json
-import paho.mqtt.client as mqt
+import paho.mqtt.client as mqtt
 from Camera import *
 
 
