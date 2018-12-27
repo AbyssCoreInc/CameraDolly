@@ -52,7 +52,7 @@ def main():
 	direction = Adafruit_MotorHAT.BACKWARD
 	style = Adafruit_MotorHAT.DOUBLE
 
-	self.initiateThreads(mBroker,conf)
+	initiateThreads(mBroker,conf)
 
 	counter = 0
 	while (1):
