@@ -10,8 +10,6 @@ class Configuration:
 		print("Reading configuration file")
 		with open('/etc/cameradolly.json', 'r') as handle:
 			self.json_conf = json.load(handle)
-	def getServerURL(self):
-		return self.json_conf['configuration']['server_address']
 	def getMqttUsername(self):
 		return self.json_conf["configuration"]["mqtt_username"]
 	def getMqttPassword(self):
