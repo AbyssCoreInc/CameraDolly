@@ -46,8 +46,9 @@ class MessageBroker:
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
 		self.client.connect(self.mqtturl,port=1883)
-		self.client.loop_start()
 		self.client.subscribe("CameraDolly/ControlMessage/#")
+		self.client.loop_start()
+		#self.client.subscribe("CameraDolly/ControlMessage/#")
 		print("DataTransmitter.connect ready")
 	
 	def trasnmitdata(self,data,topic):
