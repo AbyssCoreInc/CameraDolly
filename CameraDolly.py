@@ -45,7 +45,7 @@ def main():
 	cam.initCamera()
 	
 	mBroker = MessageBroker(conf.getMQTTURL(), conf.getMqttUsername(), conf.getMqttPassword,cam)
-	
+	mBroker.connect()
 	direction = Adafruit_MotorHAT.BACKWARD
 	style = Adafruit_MotorHAT.DOUBLE
 
