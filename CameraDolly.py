@@ -32,8 +32,6 @@ atexit.register(turnOffMotors)
 def initiateThreads(datatrans,configuration):
 	print("started threads")
 
-
-
 def main():
 	conf = Configuration()
 	conf.readConfiguration()

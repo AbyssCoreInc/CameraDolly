@@ -10,9 +10,9 @@ class Configuration:
 	
 		gp.check_result(gp.use_python_logging())
 		context = gp.gp_context_new()
-		camera = gp.check_result(gp.gp_camera_new())
-		gp.check_result(gp.gp_camera_init(camera,context))
-		camconfig = gp.check_result(gp.gp_camera_get_config(camera))
+		self.camera = gp.check_result(gp.gp_camera_new())
+		gp.check_result(gp.gp_camera_init(self.camera,context))
+		camconfig = gp.check_result(gp.gp_camera_get_config(self.camera))
 		# find the capture target config item
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(camconfig, 'capturetarget'))
 		# print current setting
@@ -24,16 +24,16 @@ class Configuration:
 			print('Choice:', n, choice)
 	
 		gp.check_result(gp.gp_widget_set_value(capture_target, "Memory card"))
-		gp.check_result(gp.gp_camera_set_config(camera, camconfig, context))
+		gp.check_result(gp.gp_camera_set_config(self.camera, camconfig, context))
 
 	def setShutterSpeed(speed):
 		return 0
 	
 	def takePicture():
 		print('Capturing image: '+str(counter))
-		file_path = gp.check_result(gp.gp_camera_capture(camera, gp.GP_CAPTURE_IMAGE))
+		file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
 		print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
 
 	def __del__(self):
-		gp.check_result(gp.gp_camera_exit(camera))
+		gp.check_result(gp.gp_camera_exit(self.camera))
 
