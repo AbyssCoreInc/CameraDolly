@@ -32,7 +32,6 @@ class Camera:
 		return 0
 	
 	def takePicture(self):
-		print('Capturing image: '+str(counter))
 		file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
 		print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
 
