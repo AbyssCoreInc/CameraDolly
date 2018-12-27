@@ -35,7 +35,7 @@ class MessageBroker:
 		#def __del__(self):
 		#self.client.loop_stop()
 
-	def on_message(client, userdata, message):
+	def on_message(self,client, userdata, message):
 		msg =str(message.payload.decode("utf-8"))
 		print("message received " ,msg)
 		print("message topic=",message.topic)
