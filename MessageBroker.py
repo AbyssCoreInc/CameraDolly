@@ -18,8 +18,8 @@ class MessageBroker:
 		self.client=mqtt.Client()
 		self.client.on_message=self.on_message
 		print("DataTransmitter.Init ready")
-	def __del__(self):
-		self.client.loop_stop()
+		#def __del__(self):
+		#self.client.loop_stop()
 
 	def on_message(client, userdata, message):
 		msg =str(message.payload.decode("utf-8"))
