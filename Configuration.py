@@ -3,7 +3,7 @@ from pprint import pprint
 
 class Configuration:
 	json_conf = []
-	def __intt__(self):
+	def __init__(self):
 		print("Init")
 	
 	def readConfiguration(self):
