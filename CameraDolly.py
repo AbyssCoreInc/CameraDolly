@@ -9,7 +9,7 @@ import time
 import atexit
 import threading
 import random
-import Configuration
+from Configuration import *
 
 threads = []
 
@@ -47,7 +47,6 @@ def initiateThreads(datatrans,configuration):
 
 
 def main():
-	
 	conf = Configuration()
 	conf.readConfiguration()
 	
