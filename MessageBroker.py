@@ -38,8 +38,7 @@ class MessageBroker:
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
 		self.client.connect(self.mqtturl,port=1883)
-		self.client.subscribe("CameraDolly/ControlMessage/#")
-		self.client.loop_start()
+		
 		print("DataTransmitter.connect ready")
 	
 	def trasnmitdata(self,data,topic):
@@ -50,9 +49,11 @@ class MessageBroker:
 		self.client.publish(topic,payload=datastr,qos=0, retain=False)
 
 	def worker(self):
+		self.client.subscribe("CameraDolly/ControlMessage/#")
+		self.client.loop_start()
 		try:
 			while True:
-				time.sleep(1)
+				time.sleep(0.2)
 		except KeyboardInterrupt:
 			print("exiting")
 		self.client.disconnect()
