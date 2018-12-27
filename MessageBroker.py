@@ -7,12 +7,12 @@ import time
 def on_log(client, userdata, level, buf):
 	print("log: ",buf)
 
-def on_message(client, userdata, message):
-	msg =str(message.payload.decode("utf-8"))
-	print("message received " ,msg)
-	print("message topic=",message.topic)
-	print("message qos=",message.qos)
-	print("message retain flag=",message.retain)
+#def on_message(client, userdata, message):
+#	msg =str(message.payload.decode("utf-8"))
+#	print("message received " ,msg)
+#	print("message topic=",message.topic)
+#	print("message qos=",message.qos)
+#	print("message retain flag=",message.retain)
 #	if (msg == "start"):
 #		self.camera.running = 1
 
@@ -29,7 +29,7 @@ class MessageBroker:
 		self.passwd=password
 		self.camera = camera
 		self.client=mqtt.Client("CameraDolly")
-		self.client.on_message=on_message
+		self.client.on_message=self.on_message
 		self.client.on_log=on_log
 		print("DataTransmitter.Init ready")
 		#def __del__(self):
