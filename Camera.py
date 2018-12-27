@@ -5,7 +5,7 @@ class Camera:
 		self.config = configuration
 		self.running = 0
 
-	def initCamera():
+	def initCamera(self):
 		logging.basicConfig(format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
 	
 		gp.check_result(gp.use_python_logging())
@@ -26,10 +26,10 @@ class Camera:
 		gp.check_result(gp.gp_widget_set_value(capture_target, "Memory card"))
 		gp.check_result(gp.gp_camera_set_config(self.camera, camconfig, context))
 
-	def setShutterSpeed(speed):
+	def setShutterSpeed(self,speed):
 		return 0
 	
-	def takePicture():
+	def takePicture(self):
 		print('Capturing image: '+str(counter))
 		file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
 		print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
