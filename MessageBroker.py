@@ -53,8 +53,8 @@ class MessageBroker:
 		try:
 			while True:
 				time.sleep(1)
-			except KeyboardInterrupt:
-				print("exiting")
+		except KeyboardInterrupt:
+			print("exiting")
 		self.client.disconnect()
 		self.client.loop_stop()
 #print("DataTransmitter.trasnmitdata ready")
