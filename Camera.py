@@ -1,5 +1,6 @@
 import gphoto2 as gp
 import logging
+from Configuration import *
 
 class Camera:
 	def __init__(self, configuration):
