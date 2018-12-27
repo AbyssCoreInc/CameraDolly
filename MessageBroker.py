@@ -3,6 +3,9 @@ import paho.mqtt.client as mqtt
 from Camera import *
 
 
+def on_log(client, userdata, level, buf):
+	print("log: ",buf)
+
 class MessageBroker:
 	mqtturl = "null"
 	uname = "name"
@@ -15,8 +18,9 @@ class MessageBroker:
 		self.uname=username
 		self.passwd=password
 		self.camera = camera
-		self.client=mqtt.Client()
+		self.client=mqtt.Client("CameraDolly")
 		self.client.on_message=self.on_message
+		self.client.on_log=on_log
 		print("DataTransmitter.Init ready")
 		#def __del__(self):
 		#self.client.loop_stop()
