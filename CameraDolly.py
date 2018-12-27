@@ -1,6 +1,4 @@
 from __future__ import print_function
-
-import logging
 import os
 import subprocess
 import sys
@@ -60,6 +58,8 @@ def main():
 			time.sleep(1)
 			# Capture image
 			camera.takePicture()
+			statusMsq = "Image "+str(counter)+" of "+str(images)+" taken"
+			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
 			counter = 0
 	
