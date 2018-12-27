@@ -42,7 +42,7 @@ def main():
 	numsteps = conf.getStepsPerFrame()
 	images = conf.getDefaultImages()
 	
-	camera = Camera()
+	camera = Camera(conf)
 	camera.initCamera()
 	
 	mBroker = MessageBroker(camera)
