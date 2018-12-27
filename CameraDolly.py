@@ -9,6 +9,7 @@ import threading
 import random
 from Configuration import *
 from Camera import *
+from MessageBroker import *
 
 threads = []
 
