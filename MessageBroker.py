@@ -1,6 +1,6 @@
 import json
 import paho.mqtt.client as mqt
-import Camera
+from Camera import *
 
 
 class MessageBroker:
