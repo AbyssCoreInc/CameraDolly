@@ -41,24 +41,24 @@ def main():
 	numsteps = conf.getStepsPerFrame()
 	images = conf.getDefaultImages()
 	
-	camera = Camera(conf)
-	camera.initCamera()
+	cam = Camera(conf)
+	cam.initCamera()
 	
-	mBroker = MessageBroker(camera)
+	mBroker = MessageBroker(cam)
 	
 	direction = Adafruit_MotorHAT.BACKWARD
 	style = Adafruit_MotorHAT.DOUBLE
 
 	counter = 0
 	while (1):
-		if (counter < images and camera.running == 1):
+		if (counter < images and cam.running == 1):
 			counter = counter + 1
 			# Move dolly
 			myStepper1.step(numsteps, direction, style)
 			# Wait for awhile
 			time.sleep(1)
 			# Capture image
-			camera.takePicture()
+			cam.takePicture()
 			statusMsq = "Image "+str(counter)+" of "+str(images)+" taken"
 			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
