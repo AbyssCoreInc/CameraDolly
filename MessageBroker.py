@@ -56,6 +56,8 @@ class MessageBroker:
 		try:
 			while True:
 				time.sleep(1)
+				self.client.subscribe("CameraDolly/ControlMessage")
+				self.client.loop_start()
 				print("Wait messages")
 		except KeyboardInterrupt:
 			print("exiting")
