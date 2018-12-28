@@ -72,6 +72,7 @@ def main():
 			statusMsq = "stopped"
 			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"running")
 			counter = 0
+			time.sleep(1)
 	
 	return 0
 
