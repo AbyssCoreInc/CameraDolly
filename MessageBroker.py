@@ -34,7 +34,9 @@ class MessageBroker:
 		print("message retain flag=",message.retain)
 		if (msg == "start"):
 			self.camera.running = 1
-
+		if (msg == "stop")
+			self.camera.running = 0
+			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
 		self.client.connect(self.mqtturl,port=1883)
