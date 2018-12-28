@@ -34,7 +34,7 @@ class MessageBroker:
 		print("message retain flag=",message.retain)
 		if (msg == "start"):
 			self.camera.running = 1
-		if (msg == "stop")
+		if (msg == "stop"):
 			self.camera.running = 0
 			
 	def connect(self):
