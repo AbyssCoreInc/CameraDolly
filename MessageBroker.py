@@ -56,7 +56,7 @@ class MessageBroker:
 		try:
 			while True:
 				time.sleep(1)
-				print("blaah")
+		#print("blaah")
 		except KeyboardInterrupt:
 			print("exiting")
 		self.client.disconnect()
