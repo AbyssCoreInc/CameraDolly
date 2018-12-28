@@ -51,12 +51,12 @@ class MessageBroker:
 		self.client.publish(topic,payload=datastr,qos=0, retain=False)
 
 	def worker(self):
-		self.client.subscribe("CameraDolly/ControlMessage/#")
+		self.client.subscribe("CameraDolly/ControlMessage")
 		self.client.loop_start()
 		try:
 			while True:
 				time.sleep(1)
-		#print("blaah")
+				print("Wait messages")
 		except KeyboardInterrupt:
 			print("exiting")
 		self.client.disconnect()
