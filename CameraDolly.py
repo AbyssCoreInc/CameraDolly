@@ -66,7 +66,9 @@ def main():
 			cam.takePicture()
 			statusMsq = "Image "+str(counter)+" of "+str(images)+" taken"
 			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
+			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"running")
 		else:
+			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"stopped")
 			counter = 0
 	
 	return 0
