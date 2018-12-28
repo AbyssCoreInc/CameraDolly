@@ -67,10 +67,10 @@ def main():
 			statusMsq = "Image "+str(counter)+" of "+str(images)+" taken"
 			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 			statusMsq = "running"
-			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"running")
+			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
 			statusMsq = "stopped"
-			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"running")
+			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 			counter = 0
 			time.sleep(1)
 	
