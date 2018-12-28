@@ -53,7 +53,7 @@ class PWM(object):
         general_call_i2c = get_i2c_device(0x00, i2c, i2c_bus)
         general_call_i2c.writeRaw8(0x06)        # SWRST
 
-    def __init__(self, address=0x40, debug=False, i2c=None, i2c_bus=None):
+    def __init__(self, address=0x66, debug=False, i2c=None, i2c_bus=None):
         self.i2c = get_i2c_device(address, i2c, i2c_bus)
         logger.debug("Reseting PCA9685 MODE1 (without SLEEP) and MODE2")
         self.setAllPWM(0, 0)
