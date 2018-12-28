@@ -44,7 +44,7 @@ class MessageBroker:
 		print("DataTransmitter.connect ready")
 	
 	def trasnmitdata(self,data,topic):
-		print("DataTransmitter.trasnmitdata")
+		print("DataTransmitter.trasnmitdata topic:"+topic+" msg:"+data)
 		
 		datastr = str(data)
 		datastr = datastr.replace("'","\"")
