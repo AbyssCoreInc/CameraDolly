@@ -1,6 +1,7 @@
 import json
 import paho.mqtt.client as mqtt
 from Camera import *
+import CameraDolly
 import time
 
 
@@ -13,12 +14,13 @@ class MessageBroker:
 	passwd = "passwd"
 	type = "MQTT"
 	
-	def __init__(self, url, username, password,camera):
+	def __init__(self, url, username, password,camera,dolly):
 		# connec to server REST interface
 		self.mqtturl=url
 		self.uname=username
 		self.passwd=password
 		self.camera = camera
+		self.dolly = dolly
 		self.client=mqtt.Client("CameraDolly")
 		self.client.on_message=self.on_message
 		self.client.on_log=on_log
@@ -36,6 +38,12 @@ class MessageBroker:
 			self.camera.running = 1
 		if (msg == "stop"):
 			self.camera.running = 0
+		if (msg == "cammodel"):
+				self.camera.sendModel()
+		if (msg == "getstepsize"):
+				self.dolly.sendStepSize()
+		if (msg == "getstepcount"):
+				self.dolly.sendStepCount()
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
@@ -56,8 +64,6 @@ class MessageBroker:
 		try:
 			while True:
 				time.sleep(1)
-				self.client.subscribe("CameraDolly/ControlMessage")
-				self.client.loop_start()
 				print("Wait messages")
 		except KeyboardInterrupt:
 			print("exiting")

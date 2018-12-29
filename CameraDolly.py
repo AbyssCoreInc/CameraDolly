@@ -12,6 +12,8 @@ from Camera import *
 from MessageBroker import *
 
 threads = []
+stepcount = 0
+numsteps = 0
 
 # create a default object, no changes to I2C address or frequency
 mh = Adafruit_MotorHAT()
@@ -34,6 +36,13 @@ def initiateThreads(datatrans,configuration):
 	t1.start()
 	print("started threads")
 
+def getStepCount():
+	return stepcount
+
+def sendStepSize():
+	return numsteps
+
+
 def main():
 	conf = Configuration()
 	conf.readConfiguration()
@@ -43,7 +52,7 @@ def main():
 	
 	numsteps = conf.getStepsPerFrame()
 	images = conf.getDefaultImages()
-	
+			
 	cam = Camera(conf)
 	cam.initCamera()
 	
@@ -60,6 +69,7 @@ def main():
 			counter = counter + 1
 			# Move dolly
 			myStepper1.step(numsteps, direction, style)
+			stepcount = stepcount+numsteps
 			# Wait for awhile
 			time.sleep(1)
 			# Capture image
