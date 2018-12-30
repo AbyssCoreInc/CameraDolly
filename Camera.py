@@ -1,17 +1,22 @@
 import gphoto2 as gp
 import logging
+import time
 from Configuration import *
+from MessageBroker import *
 
 class Camera:
-	cameramodel
+	cameramodel = "unknown"
 	
 	def __init__(self, configuration):
 		self.config = configuration
 		self.running = 0
-		self.camearamodel = "nd"
+		self.cameramodel = "unknown"
+
+	def setMessageBroker(self,messagebroker):
+		self.mBroker = messagebroker
 
 	def initCamera(self):
-		logging.basicConfig(format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
+		#logging.basicConfig(format='%(levelname)s: %(name)s: %(message)s', level=logging.WARNING)
 	
 		gp.check_result(gp.use_python_logging())
 		context = gp.gp_context_new()
@@ -20,17 +25,16 @@ class Camera:
 			try:
 				gp.gp_camera_init(self.camera,context)
 				#self.camera.init(context)
+				camconfig = gp.check_result(gp.gp_camera_get_config(self.camera))
 			except gp.GPhoto2Error as ex:
-				if ex.code == gp.GP_ERROR_MODEL_NOT_FOUND:
-					# no camera, try again in 2 seconds
-					time.sleep(2)
-					continue
-				# some other error we can't handle here
-				raise
+				print("BUIUYAAH")
+				# no camera, try again in 2 seconds
+				time.sleep(2)
+				continue
 			# operation completed successfully so exit loop
 			break
 		#gp.check_result(gp.gp_camera_init(self.camera,context))
-		camconfig = gp.check_result(gp.gp_camera_get_config(self.camera))
+		#camconfig = gp.check_result(gp.gp_camera_get_config(self.camera))
 		# find the capture target config item
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(camconfig, 'capturetarget'))
 		# print current setting
@@ -40,16 +44,16 @@ class Camera:
 		for n in range(gp.check_result(gp.gp_widget_count_choices(capture_target))):
 			choice = gp.check_result(gp.gp_widget_get_choice(capture_target, n))
 			print('Choice:', n, choice)
-	
+
 		gp.check_result(gp.gp_widget_set_value(capture_target, "Memory card"))
 		gp.check_result(gp.gp_camera_set_config(self.camera, camconfig, context))
 
- 		abilities = gp.check_result(gp.gp_camera_get_abilities(camera))
-		this.cameramodel = abilities.model
+		abilities = gp.check_result(gp.gp_camera_get_abilities(self.camera))
+		self.cameramodel = abilities.model
 
 	def setShutterSpeed(self,speed):
 		return 0
-	
+
 	def takePicture(self):
 		file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
 		print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
@@ -57,3 +61,5 @@ class Camera:
 	def __del__(self):
 		gp.check_result(gp.gp_camera_exit(self.camera))
 
+	def sendModel(self):
+		self.mBroker.trasnmitdata("cammodel"+self.cameramodel, self.config.getTopic()+"StatusMessage")

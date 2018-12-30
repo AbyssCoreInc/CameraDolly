@@ -14,13 +14,12 @@ class MessageBroker:
 	passwd = "passwd"
 	type = "MQTT"
 	
-	def __init__(self, url, username, password,camera,dolly):
+	def __init__(self, url, username, password,camera):
 		# connec to server REST interface
 		self.mqtturl=url
 		self.uname=username
 		self.passwd=password
 		self.camera = camera
-		self.dolly = dolly
 		self.client=mqtt.Client("CameraDolly")
 		self.client.on_message=self.on_message
 		self.client.on_log=on_log
@@ -41,9 +40,9 @@ class MessageBroker:
 		if (msg == "cammodel"):
 				self.camera.sendModel()
 		if (msg == "getstepsize"):
-				self.dolly.sendStepSize()
+				sendStepSize()
 		if (msg == "getstepcount"):
-				self.dolly.sendStepCount()
+				sendStepCount()
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)

@@ -44,6 +44,9 @@ def sendStepSize():
 
 
 def main():
+	global stepcount
+	global numsteps
+
 	conf = Configuration()
 	conf.readConfiguration()
 	
@@ -55,9 +58,11 @@ def main():
 			
 	cam = Camera(conf)
 	cam.initCamera()
+
 	
 	mBroker = MessageBroker(conf.getMQTTURL(), conf.getMqttUsername(), conf.getMqttPassword,cam)
 	mBroker.connect()
+	cam.setMessageBroker(mBroker)
 	direction = Adafruit_MotorHAT.BACKWARD
 	style = Adafruit_MotorHAT.DOUBLE
 
