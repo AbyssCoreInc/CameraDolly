@@ -17,9 +17,9 @@ class LensHeater:
 			time.sleep(1/self.pwmFreq)
 			counter = counter+1
 			if (counter < self.pwm):
-				mh.setPin(0,1)
+				self.mh.setPin(0,1)
 			else:
-				mh.setPin(0,0)
+				self.mh.setPin(0,0)
 			if (counter > 100):
 				counter = 0
 
