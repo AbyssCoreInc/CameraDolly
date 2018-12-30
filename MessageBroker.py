@@ -50,10 +50,10 @@ class MessageBroker:
 		if (msg == "getstepcount"):
 			sendStepCount()
 		if (msg == "getheatsetting"):
-			heater.sendHeatSetting()
+			self.heater.sendHeatSetting()
 		if (msg == "setheat"):
 			print("on_message: set heat to "+setting)
-			heater.setPWM(int(setting))
+			self.heater.setPWM(int(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
