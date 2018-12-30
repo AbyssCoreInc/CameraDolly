@@ -52,6 +52,7 @@ class MessageBroker:
 		if (msg == "getheatsetting"):
 			heater.sendHeatSetting()
 		if (msg == "setheat"):
+			print("on_message: set heat to "+setting)
 			heater.setPWM(int(setting))
 			
 	def connect(self):
