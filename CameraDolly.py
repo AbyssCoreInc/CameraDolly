@@ -69,11 +69,12 @@ def main():
 
 	#start lens warming on PWM0 on motorhat
 	#mh.setPin(0,0)
-	lensHeater = LensHeater(mh)
+	lensHeater = LensHeater(mh,conf)
 
 	mBroker = MessageBroker(conf.getMQTTURL(), conf.getMqttUsername(), conf.getMqttPassword,cam,lensHeater)
 	mBroker.connect()
 	cam.setMessageBroker(mBroker)
+	lensHeater.setMessageBroker(mBroker)
 	
 	initiateThreads(mBroker,lensHeater,conf)
 	counter = 0

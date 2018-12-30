@@ -6,10 +6,14 @@ from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor, Adafruit_Step
 
 
 class LensHeater:
-	def __init__(self, motorhat):
+	def __init__(self, motorhat,config):
 		self.pwmFreq = 10
 		self.pwm = 50
 		self.mh = motorhat
+		self.config = config
+	
+	def setMessageBroker(self,messagebroker):
+		self.mBroker = messagebroker
 	
 	def worker(self):
 		counter = 0
@@ -33,4 +37,7 @@ class LensHeater:
 		return self.pwm
 	def getPwmFreq(self):
 		return self.pwmFreq
+
+	def sendHeatSetting(self):
+		self.mBroker.trasnmitdata("heatsett"+self.pwm, self.config.getTopic()+"StatusMessage")
 
