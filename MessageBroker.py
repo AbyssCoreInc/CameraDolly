@@ -34,7 +34,11 @@ class MessageBroker:
 		print("message topic=",message.topic)
 		print("message qos=",message.qos)
 		print("message retain flag=",message.retain)
-		msg,setting = msge.split("-")
+		if (len(msge.split("-")) != 2):
+			msg = msge
+		else:
+			msg,setting = msge.split("-")
+		
 		if (msg == "start"):
 			self.camera.running = 1
 		if (msg == "stop"):
