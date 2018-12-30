@@ -14,12 +14,13 @@ class MessageBroker:
 	passwd = "passwd"
 	type = "MQTT"
 	
-	def __init__(self, url, username, password,camera):
+	def __init__(self, url, username, password,camera,heater):
 		# connec to server REST interface
 		self.mqtturl=url
 		self.uname=username
 		self.passwd=password
 		self.camera = camera
+		self.heater = heater
 		self.client=mqtt.Client("CameraDolly")
 		self.client.on_message=self.on_message
 		self.client.on_log=on_log
@@ -28,21 +29,26 @@ class MessageBroker:
 		#self.client.loop_stop()
 
 	def on_message(self,client, userdata, message):
-		msg =str(message.payload.decode("utf-8"))
-		print("message received " ,msg)
+		msge =str(message.payload.decode("utf-8"))
+		print("message received " ,msge)
 		print("message topic=",message.topic)
 		print("message qos=",message.qos)
 		print("message retain flag=",message.retain)
+		msg,setting = msg.split("-")
 		if (msg == "start"):
 			self.camera.running = 1
 		if (msg == "stop"):
 			self.camera.running = 0
 		if (msg == "cammodel"):
-				self.camera.sendModel()
+			self.camera.sendModel()
 		if (msg == "getstepsize"):
-				sendStepSize()
+			sendStepSize()
 		if (msg == "getstepcount"):
-				sendStepCount()
+			sendStepCount()
+		if (msg == "getheatsetting"):
+			heater.sendHeatSetting()
+		if (msg == "setheat"):
+			heater.setPWM(int(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)

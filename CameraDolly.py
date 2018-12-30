@@ -10,6 +10,7 @@ import random
 from Configuration import *
 from Camera import *
 from MessageBroker import *
+from LensHeater import *
 
 threads = []
 stepcount = 0
@@ -30,10 +31,15 @@ def turnOffMotors():
 
 atexit.register(turnOffMotors)
 
-def initiateThreads(datatrans,configuration):
+def initiateThreads(datatrans,lensheater,configuration):
 	t1 = threading.Thread(target=datatrans.worker)
 	threads.append(t1)
 	t1.start()
+	
+	t2 = threading.Thread(target=lensheater.worker)
+	threads.append(t2)
+	t2.start()
+	
 	print("started threads")
 
 def getStepCount():
@@ -41,7 +47,6 @@ def getStepCount():
 
 def sendStepSize():
 	return numsteps
-
 
 def main():
 	global stepcount
@@ -59,18 +64,17 @@ def main():
 	cam = Camera(conf)
 	cam.initCamera()
 
-	
-	mBroker = MessageBroker(conf.getMQTTURL(), conf.getMqttUsername(), conf.getMqttPassword,cam)
-	mBroker.connect()
-	cam.setMessageBroker(mBroker)
 	direction = Adafruit_MotorHAT.BACKWARD
 	style = Adafruit_MotorHAT.DOUBLE
 
-	initiateThreads(mBroker,conf)
-	
 	#start lens warming on PWM0 on motorhat
-	mh.setPin(0,1)
+	#mh.setPin(0,0)
+	lensHeater = LensHeater(mh)
+	initiateThreads(mBroker,lensHeater,conf)
 
+	mBroker = MessageBroker(conf.getMQTTURL(), conf.getMqttUsername(), conf.getMqttPassword,cam,lensHeater)
+	mBroker.connect()
+	cam.setMessageBroker(mBroker)
 	counter = 0
 	while (1):
 		if (counter < images and cam.running == 1):
