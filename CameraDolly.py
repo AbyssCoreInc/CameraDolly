@@ -67,6 +67,9 @@ def main():
 	style = Adafruit_MotorHAT.DOUBLE
 
 	initiateThreads(mBroker,conf)
+	
+	#start lens warming on PWM0 on motorhat
+	mh.setPin(0,1)
 
 	counter = 0
 	while (1):
