@@ -26,4 +26,15 @@ class Configuration:
 		return self.json_conf["configuration"]["defaultimages"]
 	def getStepperSpeed(self):
 		return self.json_conf["configuration"]["stepperspeed"]
-
+	def getStepsPerRev(self):
+		return self.json_conf["configuration"]["steps_rev"]
+	def getLinearPitch(self):
+		return self.json_conf["configuration"]["linear_pitch"]
+	def getLinearTeeth(self):
+		return self.json_conf["configuration"]["linear_teeth"]
+	def getAngularTeeth(self):
+		return self.json_conf["configuration"]["anglular_teeth"]
+	def getAngularStepsPerTeeth(self):
+		return self.json_conf["configuration"]["anglular_steps_teeth"]
+	def getStabisationBuffer(self):
+		return self.json_conf["configuration"]["stabilisationtime"]

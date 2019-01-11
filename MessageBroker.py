@@ -1,5 +1,6 @@
 import json
 import paho.mqtt.client as mqtt
+from uuid import getnode as get_mac
 from Camera import *
 import CameraDolly
 import time
@@ -14,13 +15,14 @@ class MessageBroker:
 	passwd = "passwd"
 	type = "MQTT"
 	
-	def __init__(self, url, username, password,camera,heater):
+	def __init__(self, url, username, password,camera,dolly,heater):
 		# connec to server REST interface
 		self.mqtturl=url
 		self.uname=username
 		self.passwd=password
 		self.camera = camera
 		self.heater = heater
+		self.dolly = dolly
 		self.client=mqtt.Client("CameraDolly")
 		self.client.on_message=self.on_message
 		self.client.on_log=on_log
@@ -40,9 +42,9 @@ class MessageBroker:
 			msg,setting = msge.split("-")
 		
 		if (msg == "start"):
-			self.camera.running = 1
+			self.dolly.start()
 		if (msg == "stop"):
-			self.camera.running = 0
+			self.dolly.stop()
 		if (msg == "cammodel"):
 			self.camera.sendModel()
 		if (msg == "getstepsize"):
@@ -58,12 +60,62 @@ class MessageBroker:
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
 		self.client.connect(self.mqtturl,port=1883)
-		
 		print("DataTransmitter.connect ready")
 	
+	def getTimeStamp(self):
+		ts = time.time()
+		utcts = datetime.datetime.utcfromtimestamp(ts)
+		zonets = timezone('UTC').localize(utcts)
+		timestamp = zonets.strftime('%Y-%m-%dT%H:%M:%S')
+		return timestamp
+	
+	def getDollyIDServiceField(self):
+		mac = get_mac()
+		#field = "{\n"
+		field = ""
+		field = field + "\"_id\":{\n"
+		field = field + "\t\t\"id\":\""+mac+"\",\n"
+		field = field + "\t\t\"type\":\"dolly\",\n"
+		field = field + "\t\t\"servicePath\":\"/dolly\",\n"
+		field = field + "}"
+		return field
+	def getDollyIDField(self):
+		mac = get_mac()
+		field = ""
+		field = field + "\t\"id\":\""+mac+"\",\n"
+		field = field + "\t\"type\":\"dolly\",\n"
+		field = field + "\t\"isPattern\":\"false\",\n"
+		return field
+	
+	def transmitPositionMessage(position, angle, images):
+		mac = get_mac()
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"position\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(position)+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"angle\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(angle)+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"images\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+str(images)+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = "}"
+		self.transmitdata(message,conf.getTopic()+"PositionMessage")
+	
+
 	def trasnmitdata(self,data,topic):
 		print("DataTransmitter.trasnmitdata topic:"+topic+" msg:"+data)
-		
 		datastr = str(data)
 		datastr = datastr.replace("'","\"")
 		self.client.publish(topic,payload=datastr,qos=0, retain=False)
