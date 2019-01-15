@@ -15,6 +15,7 @@ from LensHeater import *
 threads = []
 stepcount = 0
 numsteps = 0
+counter = 0
 
 # create empty threads (these will hold the stepper 1 and 2 threads)
 st1 = threading.Thread()
@@ -36,13 +37,13 @@ def initiateThreads(datatrans,lensheater,configuration):
 def getStepCount():
 	return stepcount
 
-def sendStepSize():
-	return numsteps
+def getCounter():
+	return counter
 
 def main():
 	global stepcount
 	global numsteps
-
+	global counter
 	conf = Configuration()
 	conf.readConfiguration()
 
@@ -60,7 +61,7 @@ def main():
 	lensHeater.setMessageBroker(mBroker)
 	
 	initiateThreads(mBroker,lensHeater,conf)
-	counter = 0
+	
 	while (1):
 		if (counter < images and dolly.isRunning == 1):
 			counter = counter + 1

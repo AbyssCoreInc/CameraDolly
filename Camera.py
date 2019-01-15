@@ -61,5 +61,8 @@ class Camera:
 	def __del__(self):
 		gp.check_result(gp.gp_camera_exit(self.camera))
 
+	def getCameraModel(self):
+		return self.cameramodel
+	
 	def sendModel(self):
 		self.mBroker.trasnmitdata("cammodel"+self.cameramodel, self.config.getTopic()+"StatusMessage")

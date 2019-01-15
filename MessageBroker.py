@@ -30,6 +30,10 @@ class MessageBroker:
 		#def __del__(self):
 		#self.client.loop_stop()
 
+	# Handle incoming MQTT messages. Parses control messages. Message format is "[commang]-[value]"
+	# at this point it is verstile enough. If more sophistication like timestamps, etc are needed
+	# better messaging has be implemented. To other direction message tries to be NGSI compliatn JSON so
+	# similar approach could be used.
 	def on_message(self,client, userdata, message):
 		msge =str(message.payload.decode("utf-8"))
 		print("message received " ,msge)
@@ -46,16 +50,30 @@ class MessageBroker:
 		if (msg == "stop"):
 			self.dolly.stop()
 		if (msg == "cammodel"):
-			self.camera.sendModel()
+			self.sendCameraModel()
 		if (msg == "getstepsize"):
-			sendStepSize()
+			self.sendStepSize()
 		if (msg == "getstepcount"):
 			sendStepCount()
+		if (msg == "getposition"):
+			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter())
 		if (msg == "getheatsetting"):
 			self.heater.sendHeatSetting()
 		if (msg == "setheat"):
 			print("on_message: set heat to "+setting)
 			self.heater.setPWM(int(setting))
+		if (msg == "setmode"):
+			print("on_message: set mode to "+setting)
+			self.dolly.setOperationModes(int(setting))
+		if (msg == "settargetx"):
+			print("on_message: set tracking X to "+setting)
+			self.dolly.setTrackingX(int(setting))
+		if (msg == "settargety"):
+			print("on_message: set tracking Y to "+setting)
+			self.dolly.setTrackingY(int(setting))
+		if (msg == "setstepdistance"):
+			print("on_message: set step distance to "+setting)
+			self.dolly.setStepDistance(int(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
@@ -69,6 +87,7 @@ class MessageBroker:
 		timestamp = zonets.strftime('%Y-%m-%dT%H:%M:%S')
 		return timestamp
 	
+	# Method to construct ID field for NGSI service desciption messages (not used right now)
 	def getDollyIDServiceField(self):
 		mac = get_mac()
 		#field = "{\n"
@@ -79,6 +98,8 @@ class MessageBroker:
 		field = field + "\t\t\"servicePath\":\"/dolly\",\n"
 		field = field + "}"
 		return field
+
+	# Method for contructing ID field for dolly NGSI status messages
 	def getDollyIDField(self):
 		mac = get_mac()
 		field = ""
@@ -87,6 +108,8 @@ class MessageBroker:
 		field = field + "\t\"isPattern\":\"false\",\n"
 		return field
 	
+	# Method for transmitting dolly position status message
+	# Sends position on rail, angle of the camera head and number of images taken
 	def transmitPositionMessage(position, angle, images):
 		mac = get_mac()
 		message = "{\n"
@@ -112,7 +135,45 @@ class MessageBroker:
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = "}"
 		self.transmitdata(message,conf.getTopic()+"PositionMessage")
+
+	# Method for transmitting camera model string
+	# Sends camera model to subsribers
+	def transmitCameraModel(self):
+		mac = get_mac()
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"cameramodel\",\n"
+		message = message + "\t\t\t\"type\":\"string\",\n"
+		message = message + "\t\t\t\"value\":\""+camera.getCameraModel()+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = "}"
+		self.transmitdata(message,conf.getTopic()+"CameraModelMessage")
 	
+	def sendStepSize():
+		mac = get_mac()
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"stepsize\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(dolly.getStepSizeMM())+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"anglestep\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(dolly.getAngleDeg())+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = "}"
+		self.transmitdata(message,conf.getTopic()+"PositionMessage")
 
 	def trasnmitdata(self,data,topic):
 		print("DataTransmitter.trasnmitdata topic:"+topic+" msg:"+data)

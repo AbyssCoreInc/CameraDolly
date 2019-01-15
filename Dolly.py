@@ -1,10 +1,17 @@
 import logging
 import time
+import math
 from Configuration import *
 from MessageBroker import *
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor, Adafruit_StepperMotor
 
 class Dolly:
+	LINEAR         = 0
+	ANGULAR        = 1
+	LINEARANGLULAR = 2
+	LOCKLINEAR     = 3
+	LOCKANGLULAR   = 4
+	
 	def __init__(self, configuration,motorhat):
 		# create a default object, no changes to I2C address or frequency
 		self.mh = motorhat
@@ -14,11 +21,19 @@ class Dolly:
 		self.myStepper1 = mh.getStepper(stepsPerRev, 1)      # 200 steps/rev, motor port #1
 		self.myStepper1.setSpeed(conf.getStepperSpeed())
 	
+		self.xdist = 0
+		self.ydist = 0
+		self.mode  = Dolly.LINEAR
+	
 		self.stepcount = 0
 		self.anglecount = 0
 		self.numsteps = conf.getStepsPerFrame()
+		self.anglesteps = 0  # steps to rotate camera per frame (used in LocAngular and Anglular modes)
 		self.direction = Adafruit_MotorHAT.BACKWARD
 		self.style = Adafruit_MotorHAT.DOUBLE
+	
+		self.angleteeth = conf.getAngularTeeth()
+		self.anglestepsperteeth = conf.getAngularStepsPerTeeth()
 
 	#recommended for auto-disabling motors on shutdown!
 	def turnOffMotors(self):
@@ -28,19 +43,80 @@ class Dolly:
 		self.mh.getMotor(4).run(Adafruit_MotorHAT.BRAKE)
 	
 	def moveDolly(self):
-		# Move dolly
-		self.myStepper1.step(self.numsteps, self.direction, self.style)
-		self.stepcount = self.stepcount+self.numsteps
+		if (self.mode == Dolly.LINEAR):
+			self.myStepper1.step(self.numsteps, self.direction, self.style)
+			self.stepcount = self.stepcount+self.numsteps
+				
+		if (self.mode == Dolly.ANGULAR):
+			self.rotateHead(self.anglesteps)
+			self.anglecount = self.anglecount+self.anglesteps
+		
+		if (self.mode == Dolly.LINEARANGLULAR):
+			self.rotateHead(self.anglesteps)
+			self.anglecount = self.anglecount+self.anglesteps
+			self.myStepper1.step(self.numsteps, self.direction, self.style)
+			self.stepcount = self.stepcount+self.numsteps
 
-	def getPosition(self):
+		if (self.mode == Dolly.LOCKLINEAR):
+			self.myStepper1.step(self.numsteps, self.direction, self.style)
+			anglechange = self.calculateAngularSteps()
+			self.rotateHead(anglechange)
+			self.anglecount = self.anglecount+anglechange
+			self.stepcount = self.stepcount+self.numsteps
+
+		if (self.mode == Dolly.LOCKANGLULAR):
+			stepstomove = self.calculateLinearSteps()
+			self.myStepper1.step(stepstomove, self.direction, self.style)
+			self.stepcount = self.stepcount+stepstomove
+			
+			self.rotateHead(self.anglesteps)
+			self.anglecount = self.anglecount+self.anglesteps
+
+	def rotateHead(self):
+		if (self.mode == Dolly.ANGULAR)
+
+	def calculateLinearSteps():
+		if (self.mode == Dolly.LOCKANGLULAR):
+			#determine X position
+			x_comp = self.xdist-self.stepsToDistanceM(self.stepcount)
+			y_comp = self.ydist
+			alpha  = math.atan(x_comp/y_comp) # radians
+			#delta is the angle in new position
+			delta  = alhpa - self.angleStepsToRad(self.anglesteps)
+			# determine how much x_component need to be moved
+			return self.distanceToStepsM(math.tan(delta)*y_comp)
+		else:
+			return 0
+				
+	def calculateAngularSteps():
+		if (self.mode == Dolly.LOCKLINEAR):
+			# position where we start
+			x_comp = self.xdist-self.stepsToDistanceM(self.stepcount)
+			y_comp = self.ydist
+			alpha  = math.atan(x_comp/y_comp) # radians of the fitst position
+			#delta is the angle in new position
+			x_delta = self.xdist-self.stepsToDistanceM(self.stepcount+self.numsteps)
+			delta  = alhpa - math.atan(x_delta/y_comp)
+			# determine how much x_component need to be moved
+			return self.radiansToSteps(delta)
+		else:
+			return 0
+
+	# retuns linear position of the dolly in millimeters
+	def getPositionMM(self):
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
-		return float(self.stepcount)*float(pitch*teeth)/float(self.stepsPerRev)
+		return float(self.stepcount)*(float(pitch*teeth)/float(self.stepsPerRev))
 
-	def getAngle(self):
+	# retuns linear step size of the dolly in millimeters
+	def getStepSizeMM(self):
+		pitch = self.config.getLinearPitch()
+		teeth = self.config.getLinearTeeth()
+		return float(self.numsteps)*float(pitch*teeth)/float(self.stepsPerRev)
+
+	def getAngleDeg(self):
 		steps = self.config.getAngularStepsPerTeeth()
-		teeth = self.config.getAngularTeeth()
-		return float(self.anglecount)*float(360.0/(teeth*steps))
+		return float(self.anglecount)*float(360.0/(self.angleteeth*steps))
 
 	def linearHome(self):
 		if (self.direction == Adafruit_MotorHAT.BACKWARD):
@@ -50,12 +126,37 @@ class Dolly:
 		self.stepcount = 0
 		self.running = 0
 
+	def setOperationModes(self,mode):
+		if (self.running == 1):
+			self.running = 0
+			self.linearHome()
+			self.anglularHome()
+		
+		self.mode = mode
+
+	# units meters
+	def setTrackingX(self,xdist):
+		self.xdist = xdist
+
+	# units meters
+	def setTrackingY(self,ydist):
+		self.ydist = ydist
+
+	# units meters
+	def setStepDistance(self,dist):
+		self.numsteps = self.distanceToStepsM(dist)
+	
+	# units meters
+	def setStepAngle(self,angle):
+		self.anglesteps = self.radiansToSteps(math.radians(angle))
+	
+	# Move andular axis to home and set counter to zero
 	def anglularHome(self):
 		if (self.direction == Adafruit_MotorHAT.BACKWARD):
 			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.FORWARD, self.style)
 		else:
 			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.BACKWARD, self.style)
-		self.stepcount = 0
+		self.anglestepcount = 0
 		self.running = 0
 
 	def isRunning(self):
@@ -66,3 +167,15 @@ class Dolly:
 
 	def stop(self):
 		self.running = 0
+	
+	def angleStepsToRad(self,steps):
+		return steps * math.radians(360/(self.angleteeth*self.anglestepsperteeth))
+	def radiansToSteps(self,rads):
+		return rads/math.radians(360/(self.angleteeth*self.anglestepsperteeth))
+	
+	def stepsToDistanceM(self,steps):
+		return (((self.teeth*self.pitch)/self.stepsPerRev)*steps)/1000
+	
+	def distanceToStepsM(self,dist):
+		return (1000*dist)/(((self.teeth*self.pitch)/self.stepsPerRev))
+
