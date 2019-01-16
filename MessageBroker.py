@@ -165,6 +165,22 @@ class MessageBroker:
 		message = message + "}"
 		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
 	
+	def transmitHeatSetting(self):
+		mac = get_mac()
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"heatsetting\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+self.heater.getPWM()+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = message + "}"
+		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
+	
 	def sendStepSize(self):
 		mac = get_mac()
 		message = "{\n"
@@ -184,7 +200,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = message + "}"
-		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
+		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 	
 	def sendOpMode(self):
 		mac = get_mac()
@@ -200,7 +216,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = message + "}"
-		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
+		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 
 	def sendTracking(self):
 		mac = get_mac()
@@ -221,10 +237,10 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = message + "}"
-		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
+		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 
 	def transmitdata(self,data,topic):
-		print("DataTransmitter.trasnmitdata topic:"+topic+" msg:"+data)
+		print("DataTransmitter.transmitdata topic:"+topic+" msg:"+data)
 		datastr = str(data)
 		datastr = datastr.replace("'","\"")
 		self.client.publish(topic,payload=datastr,qos=0, retain=False)

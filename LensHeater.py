@@ -47,7 +47,3 @@ class LensHeater:
 		return self.pwm
 	def getPwmFreq(self):
 		return self.pwmFreq
-
-	def sendHeatSetting(self):
-		self.mBroker.trasnmitdata("heatsett"+self.pwm, self.config.getTopic()+"StatusMessage")
-
