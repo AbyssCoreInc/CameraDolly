@@ -64,7 +64,7 @@ def main():
 	
 	print("main: going in the foreverloop (images="+str(images)+")")
 	while (1):
-		if (counter < images and dolly.isRunning == 1):
+		if (counter < images and dolly.isRunning() == 1):
 			print("main: Dolly running")
 			counter = counter + 1
 			# Move dolly
