@@ -110,6 +110,9 @@ class Dolly:
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
 		return float(self.stepcount)*(float(pitch*teeth)/float(self.stepsPerRev))
+	
+	def getPositionM(self):
+		return self.getPositionMM()/1000.0
 
 	# retuns linear step size of the dolly in millimeters
 	def getStepSizeMM(self):
@@ -181,4 +184,5 @@ class Dolly:
 	
 	def distanceToStepsM(self,dist):
 		return (1000*dist)/(((self.teeth*self.pitch)/self.stepsPerRev))
+
 

@@ -73,7 +73,7 @@ def main():
 			time.sleep(conf.getStabisationBuffer())
 			# Capture image
 			cam.takePicture()
-			mBroker.transmitPositionMessage(position, angle, counter)
+			mBroker.transmitPositionMessage(dolly.getPositionM(), dolly.getAngleDeg(), counter)
 			statusMsq = "running"
 			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
