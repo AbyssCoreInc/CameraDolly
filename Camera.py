@@ -55,14 +55,20 @@ class Camera:
 		return 0
 
 	def takePicture(self):
-		file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
-		print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
+		if (self.config.isSimulation() == 0)
+			file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
+			print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
+		else
+			print("Camera.takePicture() simalted")
 
 	def __del__(self):
 		gp.check_result(gp.gp_camera_exit(self.camera))
 
 	def getCameraModel(self):
-		return self.cameramodel
+		if (self.config.isSimulation() == 0)
+			return self.cameramodel
+		else
+			return "Simulation"
 	
 	def sendModel(self):
 		self.mBroker.trasnmitdata("cammodel"+self.cameramodel, self.config.getTopic()+"StatusMessage")

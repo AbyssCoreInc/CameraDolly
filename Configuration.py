@@ -38,3 +38,5 @@ class Configuration:
 		return self.json_conf["configuration"]["anglular_steps_teeth"]
 	def getStabisationBuffer(self):
 		return self.json_conf["configuration"]["stabilisationtime"]
+	def isSimulation(self):
+		return self.json_conf["configuration"]["simulate"]

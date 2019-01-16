@@ -14,6 +14,7 @@
 		"linear_deflength":2000,
 		"anglular_teeth":40,
 		"anglular_steps_teeth":200,
-		"stabilisationtime":1
+		"stabilisationtime":1,
+		"simulate":1
 	}
 }

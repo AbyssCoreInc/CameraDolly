@@ -50,7 +50,8 @@ def main():
 	images = conf.getDefaultImages()
 			
 	cam = Camera(conf)
-	#	cam.initCamera()
+	if (conf.isSimulation == 0)
+		cam.initCamera()
 
 	dolly = Dolly(conf,mh)
 	lensHeater = LensHeater(mh,conf)
