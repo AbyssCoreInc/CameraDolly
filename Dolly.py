@@ -35,8 +35,8 @@ class Dolly:
 		self.direction = Adafruit_MotorHAT.BACKWARD
 		self.style = Adafruit_MotorHAT.DOUBLE
 	
-		self.angleteeth = conf.getAngularTeeth()
-		self.anglestepsperteeth = conf.getAngularStepsPerTeeth()
+		self.angleteeth = self.config.getAngularTeeth()
+		self.anglestepsperteeth = self.config.getAngularStepsPerTeeth()
 
 	#recommended for auto-disabling motors on shutdown!
 	def turnOffMotors(self):
