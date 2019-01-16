@@ -114,7 +114,7 @@ class MessageBroker:
 	
 	# Method for transmitting dolly position status message
 	# Sends position on rail, angle of the camera head and number of images taken
-	def transmitPositionMessage(position, angle, images):
+	def transmitPositionMessage(self, position, angle, images):
 		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
