@@ -65,9 +65,9 @@ class Camera:
 		gp.check_result(gp.gp_camera_exit(self.camera))
 
 	def getCameraModel(self):
-		if (self.config.isSimulation() == 0)
+		if (self.config.isSimulation() == 0):
 			return self.cameramodel
-		else
+		else:
 			return "Simulation"
 	
 	def sendModel(self):
