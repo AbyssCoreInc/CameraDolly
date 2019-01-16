@@ -103,7 +103,7 @@ class MessageBroker:
 	def getDollyIDField(self):
 		mac = get_mac()
 		field = ""
-		field = field + "\t\"id\":\""+mac+"\",\n"
+		field = field + "\t\"id\":\""+str(mac)+"\",\n"
 		field = field + "\t\"type\":\"dolly\",\n"
 		field = field + "\t\"isPattern\":\"false\",\n"
 		return field
