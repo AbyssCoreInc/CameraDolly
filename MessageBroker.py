@@ -84,7 +84,7 @@ class MessageBroker:
 			self.dolly.setStepDistance(int(setting))
 		if (msg == "setanglestep"):
 			print("on_message: set angle step to "+setting)
-				self.dolly.setStepAngle(float(setting))
+			self.dolly.setStepAngle(float(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
