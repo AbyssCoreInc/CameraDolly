@@ -165,7 +165,7 @@ class MessageBroker:
 		message = message + "}"
 		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
 	
-	def sendStepSize():
+	def sendStepSize(self):
 		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
@@ -186,7 +186,7 @@ class MessageBroker:
 		message = message + "}"
 		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
 	
-	def sendOpMode():
+	def sendOpMode(self):
 		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
@@ -202,7 +202,7 @@ class MessageBroker:
 		message = message + "}"
 		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
 
-	def sendTracking():
+	def sendTracking(self):
 		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
