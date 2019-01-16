@@ -140,6 +140,9 @@ class Dolly:
 		
 		self.mode = mode
 
+	def getOperationMode(self):
+		return self.mode
+
 	# units meters
 	def setTrackingX(self,xdist):
 		self.xdist = xdist

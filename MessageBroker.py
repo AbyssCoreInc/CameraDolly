@@ -59,6 +59,10 @@ class MessageBroker:
 			self.sendStepSize()
 		if (msg == "getstepcount"):
 			sendStepCount()
+		if (msg == "getmode"):
+			sendOpMode()
+		if (msg == "gettracking"):
+			sendTracking()
 		if (msg == "getposition"):
 			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter())
 		if (msg == "getheatsetting"):
@@ -78,6 +82,9 @@ class MessageBroker:
 		if (msg == "setstepdistance"):
 			print("on_message: set step distance to "+setting)
 			self.dolly.setStepDistance(int(setting))
+		if (msg == "setanglestep"):
+			print("on_message: set angle step to "+setting)
+				self.dolly.setStepAngle(float(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
@@ -171,6 +178,43 @@ class MessageBroker:
 		message = message + "\t\t},\n"
 		message = message + "\t\t{\n"
 		message = message + "\t\t\t\"name\":\"anglestep\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(self.dolly.getAngleDeg())+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = message + "}"
+		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
+	
+	def sendOpMode():
+		mac = get_mac()
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"operationmode\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+str(self.dolly.getOperationMode())+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = message + "}"
+		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
+
+	def sendTracking():
+		mac = get_mac()
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"trackx\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(self.dolly.getStepSizeMM())+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"tracky\",\n"
 		message = message + "\t\t\t\"type\":\"float\",\n"
 		message = message + "\t\t\t\"value\":\""+str(self.dolly.getAngleDeg())+"\"\n"
 		message = message + "\t\t}\n"
