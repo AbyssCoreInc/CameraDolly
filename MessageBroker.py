@@ -50,7 +50,7 @@ class MessageBroker:
 		if (msg == "stop"):
 			self.dolly.stop()
 		if (msg == "cammodel"):
-			self.sendCameraModel()
+			self.transmitCameraModel()
 		if (msg == "getstepsize"):
 			self.sendStepSize()
 		if (msg == "getstepcount"):
