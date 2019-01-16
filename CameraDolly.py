@@ -75,11 +75,13 @@ def main():
 			cam.takePicture()
 			mBroker.transmitPositionMessage(dolly.getPositionM(), dolly.getAngleDeg(), counter)
 			statusMsq = "running"
+			lensHeater.setOn();
 			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
 			statusMsq = "stopped"
 			print("main: Dolly stopped")
 			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
+			lensHeater.setOff();
 			counter = 0
 			time.sleep(1)
 	print("main: exiting the foreverloop")
