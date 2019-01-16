@@ -83,7 +83,7 @@ class MessageBroker:
 	
 	def getTimeStamp(self):
 		ts = time.time()
-		utcts = datetime.datetime.utcfromtimestamp(ts)
+		utcts = datetime.utcfromtimestamp(ts)
 		zonets = timezone('UTC').localize(utcts)
 		timestamp = zonets.strftime('%Y-%m-%dT%H:%M:%S')
 		return timestamp
