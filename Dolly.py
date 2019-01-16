@@ -20,6 +20,9 @@ class Dolly:
 		self.stepsPerRev = conf.getStepsPerRev()
 		self.myStepper1 = mh.getStepper(stepsPerRev, 1)      # 200 steps/rev, motor port #1
 		self.myStepper1.setSpeed(conf.getStepperSpeed())
+		
+		self.myStepper2 = mh.getStepper(stepsPerRev, 2)      # 200 steps/rev, motor port #1
+		self.myStepper2.setSpeed(conf.getStepperSpeed())
 	
 		self.xdist = 0
 		self.ydist = 0
@@ -72,8 +75,8 @@ class Dolly:
 			self.rotateHead(self.anglesteps)
 			self.anglecount = self.anglecount+self.anglesteps
 
-	def rotateHead(self):
-		if (self.mode == Dolly.ANGULAR)
+	def rotateHead(self,steps):
+			self.myStepper2.step(steps, self.direction, self.style)
 
 	def calculateLinearSteps():
 		if (self.mode == Dolly.LOCKANGLULAR):
