@@ -66,7 +66,7 @@ class MessageBroker:
 		if (msg == "getposition"):
 			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter())
 		if (msg == "getheatsetting"):
-			self.heater.sendHeatSetting()
+			self.transmitHeatSetting()
 		if (msg == "setheat"):
 			print("on_message: set heat to "+setting)
 			self.heater.setPWM(int(setting))
