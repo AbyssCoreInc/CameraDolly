@@ -1,6 +1,6 @@
 {
 	"configuration": {
-		"mqtt_address":"test.mosquitto.org",
+		"mqtt_address":"swampmill.northeurope.cloudapp.azure.com",
 		"mqtt_username":"foo",
 		"mqtt_password":"bar",
 		"mqtt_topic":"CameraDolly/",

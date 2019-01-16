@@ -59,9 +59,9 @@ def main():
 	mBroker.connect()
 	cam.setMessageBroker(mBroker)
 	lensHeater.setMessageBroker(mBroker)
-	
 	initiateThreads(mBroker,lensHeater,conf)
 	
+	print("main: going in the foreverloop")
 	while (1):
 		if (counter < images and dolly.isRunning == 1):
 			counter = counter + 1
@@ -76,10 +76,11 @@ def main():
 			#mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
 			statusMsq = "stopped"
+			print("main: Dolly stopped sending message")
 			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 			counter = 0
 			time.sleep(1)
-	
+	print("main: exiting the foreverloop")
 	return 0
 
 if __name__ == "__main__":
