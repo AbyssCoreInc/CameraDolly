@@ -145,7 +145,7 @@ class MessageBroker:
 	def transmitCameraModel(self):
 		mac = get_mac()
 		message = "{\n"
-		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + "\"contextElements\": [\n\t{\n"
 		message = message + self.getDollyIDField()+",\n"
 		message = message + "\t\"attributes\": [\n"
 		message = message + "\t\t{\n"
