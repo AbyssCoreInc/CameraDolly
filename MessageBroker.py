@@ -177,7 +177,7 @@ class MessageBroker:
 		message = "}"
 		self.transmitdata(message,conf.getTopic()+"PositionMessage")
 
-	def trasnmitdata(self,data,topic):
+	def transmitdata(self,data,topic):
 		print("DataTransmitter.trasnmitdata topic:"+topic+" msg:"+data)
 		datastr = str(data)
 		datastr = datastr.replace("'","\"")
