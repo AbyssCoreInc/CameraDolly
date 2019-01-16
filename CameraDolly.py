@@ -62,9 +62,10 @@ def main():
 	lensHeater.setMessageBroker(mBroker)
 	initiateThreads(mBroker,lensHeater,conf)
 	
-	print("main: going in the foreverloop")
+	print("main: going in the foreverloop (images="+str(images)+")")
 	while (1):
 		if (counter < images and dolly.isRunning == 1):
+			print("main: Dolly running")
 			counter = counter + 1
 			# Move dolly
 			dolly.moveDolly()
@@ -77,7 +78,7 @@ def main():
 			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
 			statusMsq = "stopped"
-			print("main: Dolly stopped sending message")
+			print("main: Dolly stopped")
 			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 			counter = 0
 			time.sleep(1)
