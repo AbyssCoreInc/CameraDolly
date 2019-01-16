@@ -58,7 +58,7 @@ class Camera:
 		if (self.config.isSimulation() == 0):
 			file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
 			print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
-		else
+		else:
 			print("Camera.takePicture() simalted")
 
 	def __del__(self):
