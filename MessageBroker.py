@@ -60,9 +60,9 @@ class MessageBroker:
 		if (msg == "getstepcount"):
 			sendStepCount()
 		if (msg == "getmode"):
-			sendOpMode()
+			self.sendOpMode()
 		if (msg == "gettracking"):
-			sendTracking()
+			self.sendTracking()
 		if (msg == "getposition"):
 			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter())
 		if (msg == "getheatsetting"):
