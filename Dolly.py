@@ -17,12 +17,12 @@ class Dolly:
 		self.mh = motorhat
 		self.config = configuration
 		self.running = 0
-		self.stepsPerRev = conf.getStepsPerRev()
+		self.stepsPerRev = self.config.getStepsPerRev()
 		self.myStepper1 = mh.getStepper(stepsPerRev, 1)      # 200 steps/rev, motor port #1
-		self.myStepper1.setSpeed(conf.getStepperSpeed())
+		self.myStepper1.setSpeed(self.config.getStepperSpeed())
 		
 		self.myStepper2 = mh.getStepper(stepsPerRev, 2)      # 200 steps/rev, motor port #1
-		self.myStepper2.setSpeed(conf.getStepperSpeed())
+		self.myStepper2.setSpeed(self.config.getStepperSpeed())
 	
 		self.xdist = 0
 		self.ydist = 0
@@ -30,7 +30,7 @@ class Dolly:
 	
 		self.stepcount = 0
 		self.anglecount = 0
-		self.numsteps = conf.getStepsPerFrame()
+		self.numsteps = self.config.getStepsPerFrame()
 		self.anglesteps = 0  # steps to rotate camera per frame (used in LocAngular and Anglular modes)
 		self.direction = Adafruit_MotorHAT.BACKWARD
 		self.style = Adafruit_MotorHAT.DOUBLE
