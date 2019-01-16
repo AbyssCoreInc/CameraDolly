@@ -56,7 +56,7 @@ def main():
 	dolly = Dolly(conf,mh)
 	lensHeater = LensHeater(mh,conf)
 
-	mBroker = MessageBroker(conf.getMQTTURL(), conf.getMqttUsername(), conf.getMqttPassword,cam,dolly,lensHeater)
+	mBroker = MessageBroker(conf,cam,dolly,lensHeater)
 	mBroker.connect()
 	cam.setMessageBroker(mBroker)
 	lensHeater.setMessageBroker(mBroker)

@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 from uuid import getnode as get_mac
 from Camera import *
 import CameraDolly
+from Configuration import *
 import time
 import datetime
 from datetime import datetime, date, timedelta
@@ -17,11 +18,12 @@ class MessageBroker:
 	passwd = "passwd"
 	type = "MQTT"
 	
-	def __init__(self, url, username, password,camera,dolly,heater):
+	def __init__(self, conf,camera,dolly,heater):
 		# connec to server REST interface
-		self.mqtturl=url
-		self.uname=username
-		self.passwd=password
+		self.conf = conf
+		self.mqtturl=conf.getMQTTURL()
+		self.uname=conf.getMqttUsername()
+		self.passwd=conf.getMqttPassword()
 		self.camera = camera
 		self.heater = heater
 		self.dolly = dolly
