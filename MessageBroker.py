@@ -116,7 +116,7 @@ class MessageBroker:
 		field = ""
 		field = field + "\t\"id\":\""+str(mac)+"\",\n"
 		field = field + "\t\"type\":\"dolly\",\n"
-		field = field + "\t\"isPattern\":\"false\"\n"
+		field = field + "\t\"isPattern\":\"false\""
 		return field
 	
 	# Method for transmitting dolly position status message
