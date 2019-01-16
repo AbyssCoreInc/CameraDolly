@@ -144,7 +144,7 @@ class MessageBroker:
 		message = message + "\t\t}\n"
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
-		message = message + "}"
+		message = message + "}]"
 		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
 
 	# Method for transmitting camera model string
