@@ -174,7 +174,7 @@ class MessageBroker:
 		message = message + "\t\t{\n"
 		message = message + "\t\t\t\"name\":\"heatsetting\",\n"
 		message = message + "\t\t\t\"type\":\"integer\",\n"
-		message = message + "\t\t\t\"value\":\""+self.heater.getPWM()+"\"\n"
+		message = message + "\t\t\t\"value\":\""+str(self.heater.getPWM())+"\"\n"
 		message = message + "\t\t}\n"
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
