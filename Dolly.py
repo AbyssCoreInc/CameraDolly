@@ -18,10 +18,10 @@ class Dolly:
 		self.config = configuration
 		self.running = 0
 		self.stepsPerRev = self.config.getStepsPerRev()
-		self.myStepper1 = self.mh.getStepper(stepsPerRev, 1)      # 200 steps/rev, motor port #1
+		self.myStepper1 = self.mh.getStepper(self.stepsPerRev, 1)      # 200 steps/rev, motor port #1
 		self.myStepper1.setSpeed(self.config.getStepperSpeed())
 		
-		self.myStepper2 = self.mh.getStepper(stepsPerRev, 2)      # 200 steps/rev, motor port #1
+		self.myStepper2 = self.mh.getStepper(self.stepsPerRev, 2)      # 200 steps/rev, motor port #1
 		self.myStepper2.setSpeed(self.config.getStepperSpeed())
 	
 		self.xdist = 0
