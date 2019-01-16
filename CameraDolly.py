@@ -50,7 +50,7 @@ def main():
 	images = conf.getDefaultImages()
 			
 	cam = Camera(conf)
-	if (conf.isSimulation == 0)
+	if (conf.isSimulation() == 0)
 		cam.initCamera()
 
 	dolly = Dolly(conf,mh)
