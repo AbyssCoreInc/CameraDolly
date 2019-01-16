@@ -138,7 +138,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = "}"
-		self.transmitdata(message,conf.getTopic()+"PositionMessage")
+		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
 
 	# Method for transmitting camera model string
 	# Sends camera model to subsribers
@@ -156,7 +156,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = "}"
-		self.transmitdata(message,conf.getTopic()+"CameraModelMessage")
+		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
 	
 	def sendStepSize():
 		mac = get_mac()
@@ -177,7 +177,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = "}"
-		self.transmitdata(message,conf.getTopic()+"PositionMessage")
+		self.transmitdata(message,self.conf.getTopic()+"PositionMessage")
 
 	def transmitdata(self,data,topic):
 		print("DataTransmitter.trasnmitdata topic:"+topic+" msg:"+data)
