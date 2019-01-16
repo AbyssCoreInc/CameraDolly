@@ -73,12 +73,12 @@ def main():
 			# Capture image
 			cam.takePicture()
 			mBroker.trasnmitPositionMessage(position, angle, counter)
-			#statusMsq = "running"
-			#mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
+			statusMsq = "running"
+			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 		else:
 			statusMsq = "stopped"
 			print("main: Dolly stopped sending message")
-			mBroker.trasnmitdata(statusMsq, conf.getTopic()+"StatusMessage")
+			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
 			counter = 0
 			time.sleep(1)
 	print("main: exiting the foreverloop")
