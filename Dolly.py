@@ -121,9 +121,9 @@ class Dolly:
 
 	# retuns linear step size of the dolly in millimeters
 	def getStepSizeMM(self):
-		print("Dolly.getPositionMM "+str(self.pitch)+" x "+str(self.teeth))
+		print("Dolly.getPositionMM "+str(self.pitch)+" x "+str(self.teeth) + " x " + str(self.stepsPerRev))
 		ditance = (self.numsteps*self.pitch*self.teeth)/self.stepsPerRev
-		print("Dolly.getStepSizeMM = " + ditance)
+		print("Dolly.getStepSizeMM = " + str(ditance))
 		return ditance
 	
 	def getAngleDeg(self):
