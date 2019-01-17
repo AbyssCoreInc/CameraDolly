@@ -62,10 +62,10 @@ class Camera:
 		else:
 			print("Camera.takePicture() simalted")
 
-def setImageNumber(self, images):
+	def setImageNumber(self, images):
 		self.images = images
 
-	def getImageNumber(self)
+	def getImageNumber(self):
 		return self.images
 
 	def __del__(self):
