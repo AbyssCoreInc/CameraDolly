@@ -63,6 +63,7 @@ class MessageBroker:
 		if (msg == "getmode"):
 			self.sendOpMode()
 		if (msg == "gettracking"):
+			print("send tracking info")
 			self.sendTracking()
 		if (msg == "getimagenumber"):
 			self.sendImageNumber()
@@ -182,7 +183,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = message + "\t}\n]}"
-		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
+		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 	
 	def sendStepSize(self):
 		message = "{\n"
@@ -235,6 +236,7 @@ class MessageBroker:
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 
 	def sendTracking(self):
+		print("sendTracking - start")
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -252,6 +254,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = message + "\t}\n]}"
+		print("sendTracking - end")
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 
 	def transmitdata(self,data,topic):
