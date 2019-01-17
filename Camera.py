@@ -11,7 +11,7 @@ class Camera:
 		self.config = configuration
 		self.running = 0
 		self.cameramodel = "unknown"
-		self.images = config.getDefaultImages()
+		self.images = self.config.getDefaultImages()
 
 	def setMessageBroker(self,messagebroker):
 		self.mBroker = messagebroker
