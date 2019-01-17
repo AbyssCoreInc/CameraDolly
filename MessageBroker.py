@@ -58,7 +58,7 @@ class MessageBroker:
 		if (msg == "getstepsize"):
 			self.sendStepSize()
 		if (msg == "getstepcount"):
-			sendStepCount()
+			self.sendStepCount()
 		if (msg == "getmode"):
 			self.sendOpMode()
 		if (msg == "gettracking"):
