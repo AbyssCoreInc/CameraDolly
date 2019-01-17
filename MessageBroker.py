@@ -206,6 +206,7 @@ class MessageBroker:
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 	
 	def sendImageNumber(self):
+		print("sendImageNumber - start")
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -218,6 +219,7 @@ class MessageBroker:
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = message + "\t}\n]}"
+		print("sendImageNumber - end")
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 	
 	def sendOpMode(self):
@@ -236,7 +238,7 @@ class MessageBroker:
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 
 	def sendTracking(self):
-		print("sendTracking - start")
+		#print("sendTracking - start")
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -244,7 +246,7 @@ class MessageBroker:
 		message = message + "\t\t{\n"
 		message = message + "\t\t\t\"name\":\"trackx\",\n"
 		message = message + "\t\t\t\"type\":\"float\",\n"
-		print("sendTracking - start2")
+		#print("sendTracking - start2")
 		message = message + "\t\t\t\"value\":\""+str(self.dolly.getTrackingX())+"\"\n"
 		message = message + "\t\t},\n"
 		message = message + "\t\t{\n"
