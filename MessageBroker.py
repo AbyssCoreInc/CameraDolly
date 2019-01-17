@@ -216,6 +216,7 @@ class MessageBroker:
 		message = message + "\t\t\t\"type\":\"integer\",\n"
 		print("sendImageNumber - start2")
 		message = message + "\t\t\t\"value\":\""+str(self.cam.getImageNumber())+"\"\n"
+		print("sendImageNumber - start3")
 		message = message + "\t\t}\n"
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
