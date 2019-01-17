@@ -63,6 +63,8 @@ class MessageBroker:
 			self.sendOpMode()
 		if (msg == "gettracking"):
 			self.sendTracking()
+		if (msg == "getimagenumber"):
+			self.sendImageNumber()
 		if (msg == "getposition"):
 			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter())
 		if (msg == "getheatsetting"):
@@ -85,6 +87,9 @@ class MessageBroker:
 		if (msg == "setanglestep"):
 			print("on_message: set angle step to "+setting)
 			self.dolly.setStepAngle(float(setting))
+		if (msg == "setimagenumber"):
+			print("on_message: set image number to "+setting)
+			self.cam.setImageNumber(int(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
@@ -122,7 +127,6 @@ class MessageBroker:
 	# Method for transmitting dolly position status message
 	# Sends position on rail, angle of the camera head and number of images taken
 	def transmitPositionMessage(self, position, angle, images):
-		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -150,7 +154,6 @@ class MessageBroker:
 	# Method for transmitting camera model string
 	# Sends camera model to subsribers
 	def transmitCameraModel(self):
-		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n"
 		message = message + self.getDollyIDField()+",\n"
@@ -166,7 +169,6 @@ class MessageBroker:
 		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
 	
 	def transmitHeatSetting(self):
-		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n"
 		message = message + self.getDollyIDField()+",\n"
@@ -182,7 +184,6 @@ class MessageBroker:
 		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
 	
 	def sendStepSize(self):
-		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -202,8 +203,22 @@ class MessageBroker:
 		message = message + "\t}\n]}"
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 	
+	def sendImageNumber(self):
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"imagenumber\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+str(self.cam.getImageNumber()+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = message + "\t}\n]}"
+		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
+	
 	def sendOpMode(self):
-		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -219,7 +234,6 @@ class MessageBroker:
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 
 	def sendTracking(self):
-		mac = get_mac()
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"

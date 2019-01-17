@@ -11,6 +11,7 @@ class Camera:
 		self.config = configuration
 		self.running = 0
 		self.cameramodel = "unknown"
+		self.images = conf.getDefaultImages()
 
 	def setMessageBroker(self,messagebroker):
 		self.mBroker = messagebroker
@@ -60,6 +61,12 @@ class Camera:
 			print('Camera file path: {0}/{1}'.format(file_path.folder, file_path.name))
 		else:
 			print("Camera.takePicture() simalted")
+
+	def setImageNumber(self, images)
+		self.images = images
+
+	def getImageNumber(self)
+		return self.images
 
 	def __del__(self):
 		gp.check_result(gp.gp_camera_exit(self.camera))

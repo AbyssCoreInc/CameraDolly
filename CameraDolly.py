@@ -59,12 +59,13 @@ def main():
 	mBroker = MessageBroker(conf,cam,dolly,lensHeater)
 	mBroker.connect()
 	cam.setMessageBroker(mBroker)
+	cam.setImageNumber(images)
 	lensHeater.setMessageBroker(mBroker)
 	initiateThreads(mBroker,lensHeater,conf)
 	
 	print("main: going in the foreverloop (images="+str(images)+")")
 	while (1):
-		if (counter < images and dolly.isRunning() == 1):
+		if (counter < cam.getImageNumber() and dolly.isRunning() == 1):
 			print("main: Dolly running")
 			counter = counter + 1
 			# Move dolly
