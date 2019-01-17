@@ -11,6 +11,7 @@ from pytz import timezone
 
 def on_log(client, userdata, level, buf):
 	#print("log: ",buf)
+	print("")
 
 class MessageBroker:
 	mqtturl = "null"
