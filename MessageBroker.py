@@ -91,7 +91,7 @@ class MessageBroker:
 			self.dolly.setStepAngle(float(setting))
 		if (msg == "setimagenumber"):
 			print("on_message: set image number to "+setting)
-			self.cam.setImageNumber(int(setting))
+			self.camera.setImageNumber(int(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
