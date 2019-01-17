@@ -118,8 +118,10 @@ class Dolly:
 	def getStepSizeMM(self):
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
-		return float(self.numsteps)*float(pitch*teeth)/float(self.stepsPerRev)
-
+		ditance = float(self.numsteps)*float(pitch*teeth)/float(self.stepsPerRev)
+		print("getStepSizeMM = " + ditance)
+		return ditance
+	
 	def getAngleDeg(self):
 		steps = self.config.getAngularStepsPerTeeth()
 		return float(self.anglecount)*float(360.0/(self.angleteeth*steps))
@@ -153,7 +155,7 @@ class Dolly:
 
 	# units meters
 	def setStepDistance(self,dist):
-		self.numsteps = self.distanceToStepsM(dist)
+		self.numsteps = self.distanceToStepsMM(dist)
 	
 	# units meters
 	def setStepAngle(self,angle):
@@ -184,9 +186,23 @@ class Dolly:
 		return rads/math.radians(360/(self.angleteeth*self.anglestepsperteeth))
 	
 	def stepsToDistanceM(self,steps):
-		return (((self.teeth*self.pitch)/self.stepsPerRev)*steps)/1000
+		pitch = self.config.getLinearPitch()
+		teeth = self.config.getLinearTeeth()
+		return (((teeth*pitch)/self.stepsPerRev)*steps)/1000
+	
+	def stepsToDistanceMM(self,steps):
+		pitch = self.config.getLinearPitch()
+		teeth = self.config.getLinearTeeth()
+		return (((teeth*pitch)/self.stepsPerRev)*steps)
 	
 	def distanceToStepsM(self,dist):
-		return (1000*dist)/(((self.teeth*self.pitch)/self.stepsPerRev))
+		pitch = self.config.getLinearPitch()
+		teeth = self.config.getLinearTeeth()
+		return (1000*dist)/(((teeth*pitch)/self.stepsPerRev))
+
+	def distanceToStepsMM(self,dist):
+		pitch = self.config.getLinearPitch()
+		teeth = self.config.getLinearTeeth()
+		return (dist)/(((teeth*pitch)/self.stepsPerRev))
 
 
