@@ -198,11 +198,11 @@ class Dolly:
 	def distanceToStepsM(self,dist):
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
-		return (1000*dist)/(((teeth*pitch)/self.stepsPerRev))
+		return int((1000*dist)/(((teeth*pitch)/self.stepsPerRev)))
 
 	def distanceToStepsMM(self,dist):
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
-		return (dist)/(((teeth*pitch)/self.stepsPerRev))
+		return int((dist)/(((teeth*pitch)/self.stepsPerRev)))
 
 
