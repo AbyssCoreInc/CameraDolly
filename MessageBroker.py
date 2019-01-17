@@ -27,7 +27,7 @@ class MessageBroker:
 		self.camera = camera
 		self.heater = heater
 		self.dolly = dolly
-		self.client=mqtt.Client("CameraDolly",True)
+		self.client=mqtt.Client("CameraDolly",False)
 		self.client.on_message=self.on_message
 		self.client.on_log=on_log
 		print("DataTransmitter.Init ready")

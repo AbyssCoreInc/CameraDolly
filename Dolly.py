@@ -157,7 +157,8 @@ class Dolly:
 	
 	# units meters
 	def setStepAngle(self,angle):
-		self.anglesteps = self.radiansToSteps(math.radians(angle))
+		self.anglesteps = int(self.radiansToSteps(math.radians(angle)))
+		print("setStepAngle "+str(angle)+" -> "+str(self.anglesteps))
 	
 	# Move andular axis to home and set counter to zero
 	def anglularHome(self):
