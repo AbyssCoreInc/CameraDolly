@@ -244,6 +244,7 @@ class MessageBroker:
 		message = message + "\t\t{\n"
 		message = message + "\t\t\t\"name\":\"trackx\",\n"
 		message = message + "\t\t\t\"type\":\"float\",\n"
+		print("sendTracking - start2")
 		message = message + "\t\t\t\"value\":\""+str(self.dolly.getStepSizeMM())+"\"\n"
 		message = message + "\t\t},\n"
 		message = message + "\t\t{\n"
