@@ -62,7 +62,7 @@ class Camera:
 		else:
 			print("Camera.takePicture() simalted")
 
-	def setImageNumber(self, images)
+def setImageNumber(self, images):
 		self.images = images
 
 	def getImageNumber(self)
