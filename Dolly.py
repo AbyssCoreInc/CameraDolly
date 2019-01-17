@@ -109,7 +109,9 @@ class Dolly:
 	def getPositionMM(self):
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
-		return float(self.stepcount)*(float(pitch*teeth)/float(self.stepsPerRev))
+		result = float(self.stepcount)*(float(pitch*teeth)/float(self.stepsPerRev))
+		print("Dolly.getPositionMM = "+str(result))
+		return result
 	
 	def getPositionM(self):
 		return self.getPositionMM()/1000.0
