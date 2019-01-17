@@ -27,6 +27,9 @@ class Dolly:
 		self.xdist = 0
 		self.ydist = 0
 		self.mode  = Dolly.LINEAR
+		
+		self.pitch = self.config.getLinearPitch()
+		self.teeth = self.config.getLinearTeeth()
 	
 		self.stepcount = 0
 		self.anglecount = 0
@@ -118,10 +121,8 @@ class Dolly:
 
 	# retuns linear step size of the dolly in millimeters
 	def getStepSizeMM(self):
-		print("Dolly.getPositionMM")
-		pitch = self.config.getLinearPitch()
-		teeth = self.config.getLinearTeeth()
-		ditance = float(self.numsteps)*float(pitch*teeth)/float(self.stepsPerRev)
+		print("Dolly.getPositionMM"+str(self.pitch)+" x "+str(self.teeth))
+		ditance = float(self.numsteps)*float(self.pitch*self.teeth)/float(self.stepsPerRev)
 		print("Dolly.getStepSizeMM = " + ditance)
 		return ditance
 	
