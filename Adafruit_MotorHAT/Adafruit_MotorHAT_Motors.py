@@ -100,15 +100,8 @@ class Adafruit_StepperMotor:
         # set up coil energizing!
         coils = [0, 0, 0, 0]
 
-		step2coils = [     [1, 0, 0, 0],
-			[1, 1, 0, 0],
-            [0, 1, 0, 0],
-            [0, 1, 1, 0],
-            [0, 0, 1, 0],
-            [0, 0, 1, 1],
-            [0, 0, 0, 1],
-            [1, 0, 0, 1] ]
-            coils = step2coils[self.currentstep//(self.MICROSTEPS//2)]
+        step2coils = [[1, 0, 0, 0],[1, 1, 0, 0],[0, 1, 0, 0],[0, 1, 1, 0],[0, 0, 1, 0],[0, 0, 1, 1],[0, 0, 0, 1],[1, 0, 0, 1]]
+        coils = step2coils[self.currentstep//(self.MICROSTEPS//2)]
 
         #print "coils state = " + str(coils)
         self.MC.setPin(self.AIN2, coils[0])
