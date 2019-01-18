@@ -22,6 +22,6 @@ class Tester:
 tester = Tester()
 
 while(1):
-	tester.step(sys.argv[0],sys.argv[1])
+	tester.step(int(sys.argv[0]),int(sys.argv[1]))
 
 
