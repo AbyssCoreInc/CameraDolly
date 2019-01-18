@@ -3,7 +3,7 @@ import time
 import math
 from Configuration import *
 from MessageBroker import *
-from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor, Adafruit_StepperMotor
+from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_StepperMotor
 
 class Dolly:
 	LINEAR         = 0
