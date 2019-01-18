@@ -100,17 +100,7 @@ class Adafruit_StepperMotor:
         # set up coil energizing!
         coils = [0, 0, 0, 0]
 
-        if (style == Adafruit_MotorHAT.MICROSTEP):
-            if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
-                coils = [1, 1, 0, 0]
-            elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
-                coils = [0, 1, 1, 0]
-            elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
-                coils = [0, 0, 1, 1]
-            elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
-                coils = [1, 0, 0, 1]
-        else:
-            step2coils = [     [1, 0, 0, 0],
+		step2coils = [     [1, 0, 0, 0],
                 [1, 1, 0, 0],
                 [0, 1, 0, 0],
                 [0, 1, 1, 0],
