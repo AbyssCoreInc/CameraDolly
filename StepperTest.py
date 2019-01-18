@@ -1,10 +1,11 @@
 import sys
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_StepperMotor
 
+
 class Tester:
 	def __init__(self):
 		# create a default object, no changes to I2C address or frequency
-		self.mh = motorhat
+		self.mh = Adafruit_MotorHAT()
 		self.myStepper1 = self.mh.getStepper(200, 1)      # 200 steps/rev, motor port #1
 		self.myStepper1.setSpeed(60)
 		
