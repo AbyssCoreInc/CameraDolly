@@ -42,8 +42,6 @@ class Dolly:
 		self.atTheEnd = 0
 		self.atTheStart = 0
 		
-		self.lsm303 = Adafruit_LSM303.LSM303()
-		
 		self.pitch = self.config.getLinearPitch()
 		self.teeth = self.config.getLinearTeeth()
 		
@@ -179,7 +177,7 @@ class Dolly:
 	def linearHome(self):
 		self.stepDolly(self.stepcount)
 		#move dolly until oneof the interrupts fires
-		while(self.atTheEnd == 0 and self.atTheEnd == 0)
+		while(self.atTheEnd == 0 and self.atTheEnd == 0):
 			self.stepDolly(self.numsteps)
 		self.stepcount = 0
 		self.running = 0
@@ -261,15 +259,22 @@ class Dolly:
 		teeth = self.config.getLinearTeeth()
 		return int((dist)/(((teeth*pitch)/self.stepsPerRev)))
 	def getHeadAlignment(self):
-		accel, mag = lsm303.read()
+		accel, mag = self.lsm303.read()
 		accel_x, accel_y, accel_z = accel
 		mag_x, mag_y, mag_z = mag
 		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
 	def getHeading(self):
-		accel, mag = lsm303.read()
+		accel, mag = self.lsm303.read()
 		accel_x, accel_y, accel_z = accel
 		mag_x, mag_y, mag_z = mag
 		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
-		compassHeadin = 
+		compassHeadin = math.atan(mag_y/mag_x)
+		return compassHeadin
 
-
+	def getTilt(self):
+		accel, mag = self.lsm303.read()
+		accel_x, accel_y, accel_z = accel
+		mag_x, mag_y, mag_z = mag
+		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
+		tilt = math.atan(accel_x/accel_z)
+		return tilt
