@@ -60,6 +60,10 @@ class MessageBroker:
 			self.sendStepSize()
 		if (msg == "getstepcount"):
 			self.sendStepCount()
+		if (msg == "seekstart"):
+			self.dolly.gotoStart()
+		if (msg == "seekend"):
+			self.dolly.gotoEnd()
 		if (msg == "getmode"):
 			self.sendOpMode()
 		if (msg == "gettracking"):
@@ -67,8 +71,10 @@ class MessageBroker:
 			self.sendTracking()
 		if (msg == "getimagenumber"):
 			self.sendImageNumber()
+		if (msg == "getinterval"):
+			self.sendImageInterval()
 		if (msg == "getposition"):
-			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter())
+			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter(),dolly.getHeading(),dolly.getTilt())
 		if (msg == "getheatsetting"):
 			self.transmitHeatSetting()
 		if (msg == "setheat"):
@@ -89,9 +95,21 @@ class MessageBroker:
 		if (msg == "setanglestep"):
 			print("on_message: set angle step to "+setting)
 			self.dolly.setStepAngle(float(setting))
+		if (msg == "setanglestep"):
+			print("on_message: set declination to "+setting)
+			self.dolly.setDeclination(float(setting))
 		if (msg == "setimagenumber"):
 			print("on_message: set image number to "+setting)
 			self.camera.setImageNumber(int(setting))
+		if (msg == "setdeclination"):
+			print("on_message: set image number to "+setting)
+			self.dolly.setDeclination(float(setting))
+		if (msg == "setcomperr"):
+			print("on_message: set compass error "+setting)
+			self.dolly.setCompassError(float(setting))
+		if (msg == "interval"):
+			print("on_message: set interval "+setting)
+			self.dolly.setInterval(float(setting))
 			
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
@@ -128,7 +146,7 @@ class MessageBroker:
 	
 	# Method for transmitting dolly position status message
 	# Sends position on rail, angle of the camera head and number of images taken
-	def transmitPositionMessage(self, position, angle, images):
+	def transmitPositionMessage(self, position, angle, images,heading,tilt):
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -142,6 +160,16 @@ class MessageBroker:
 		message = message + "\t\t\t\"name\":\"angle\",\n"
 		message = message + "\t\t\t\"type\":\"float\",\n"
 		message = message + "\t\t\t\"value\":\""+str(angle)+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"heading\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(heading)+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"tilt\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		message = message + "\t\t\t\"value\":\""+str(tilt)+"\"\n"
 		message = message + "\t\t},\n"
 		message = message + "\t\t{\n"
 		message = message + "\t\t\t\"name\":\"images\",\n"
@@ -222,6 +250,25 @@ class MessageBroker:
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
 		message = message + "\t}\n]}"
 		print("sendImageNumber - end")
+		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
+	
+	def sendImageInterval(self):
+		print("sendImageInterval - start")
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"interval\",\n"
+		message = message + "\t\t\t\"type\":\"float\",\n"
+		print("sendImageInterval - start2")
+		message = message + "\t\t\t\"value\":\""+str(self.dolly.getInterval())+"\"\n"
+		print("sendImageInterval - start3")
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = message + "\t}\n]}"
+		print("sendImageInterval - end")
 		self.transmitdata(message,self.conf.getTopic()+"SettingMessage")
 	
 	def sendOpMode(self):

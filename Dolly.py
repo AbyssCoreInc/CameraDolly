@@ -4,6 +4,9 @@ import math
 from Configuration import *
 from MessageBroker import *
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_StepperMotor
+import Adafruit_LSM303
+import RPi.GPIO as GPIO
+
 
 class Dolly:
 	LINEAR         = 0
@@ -12,8 +15,16 @@ class Dolly:
 	LOCKLINEAR     = 3
 	LOCKANGLULAR   = 4
 	
+	
 	def __init__(self, configuration,motorhat):
 		# create a default object, no changes to I2C address or frequency
+		GPIO.setmode(GPIO.BCM)
+		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
+		GPIO.add_event_detect(26, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
+		self.lsm303 = Adafruit_LSM303.LSM303()
+		
 		self.mh = motorhat
 		self.config = configuration
 		self.running = 0
@@ -28,8 +39,15 @@ class Dolly:
 		self.ydist = 0
 		self.mode  = Dolly.LINEAR
 		
+		self.atTheEnd = 0
+		self.atTheStart = 0
+		
+		self.lsm303 = Adafruit_LSM303.LSM303()
+		
 		self.pitch = self.config.getLinearPitch()
 		self.teeth = self.config.getLinearTeeth()
+		
+		self.declination = 0.0
 	
 		self.stepcount = 0
 		self.anglecount = 0
@@ -40,7 +58,18 @@ class Dolly:
 	
 		self.angleteeth = self.config.getAngularTeeth()
 		self.anglestepsperteeth = self.config.getAngularStepsPerTeeth()
+	
+	
+	def startCallback(self,channel):
+		print("falling edge detected on 21")
+		self.atTheStart = 1
+		self.atTheEnd = 0
 
+	def endCallback(self,channel):
+		print("falling edge detected on 26")
+		self.atTheStart = 0
+		self.atTheEnd = 1
+	
 	#recommended for auto-disabling motors on shutdown!
 	def turnOffMotors(self):
 		self.mh.getMotor(1).run(Adafruit_MotorHAT.BRAKE)
@@ -50,7 +79,7 @@ class Dolly:
 	
 	def moveDolly(self):
 		if (self.mode == Dolly.LINEAR):
-			self.myStepper1.step(self.numsteps, self.direction, self.style)
+			self.stepDolly(self.numsteps)
 			self.stepcount = self.stepcount+self.numsteps
 				
 		if (self.mode == Dolly.ANGULAR):
@@ -60,11 +89,11 @@ class Dolly:
 		if (self.mode == Dolly.LINEARANGLULAR):
 			self.rotateHead(self.anglesteps)
 			self.anglecount = self.anglecount+self.anglesteps
-			self.myStepper1.step(self.numsteps, self.direction, self.style)
+			self.stepDolly(self.numsteps)
 			self.stepcount = self.stepcount+self.numsteps
 
 		if (self.mode == Dolly.LOCKLINEAR):
-			self.myStepper1.step(self.numsteps, self.direction, self.style)
+			self.stepDolly(self.numsteps)
 			anglechange = self.calculateAngularSteps()
 			self.rotateHead(anglechange)
 			self.anglecount = self.anglecount+anglechange
@@ -72,14 +101,28 @@ class Dolly:
 
 		if (self.mode == Dolly.LOCKANGLULAR):
 			stepstomove = self.calculateLinearSteps()
-			self.myStepper1.step(stepstomove, self.direction, self.style)
+			
+			self.stepDolly(stepstomove)
 			self.stepcount = self.stepcount+stepstomove
 			
 			self.rotateHead(self.anglesteps)
 			self.anglecount = self.anglecount+self.anglesteps
 
+	def stepDolly(self,steps):
+		if (self.direction == Adafruit_MotorHAT.FORWARD and self.atTheEnd == 0):
+			self.myStepper1.step(steps, self.direction, self.style)
+			#check if GPIO is cleared and clear the flag
+			if(GPIO.input(21) is False):
+				self.atTheStart = 0
+		if (self.direction == Adafruit_MotorHAT.BACKWARD and self.atTheStart == 0):
+			self.myStepper1.step(steps, self.direction, self.style)
+			#check if GPIO is cleared and clear the flag
+			if(GPIO.input(26) is False):
+				self.atTheEnd = 0
+	
+	
 	def rotateHead(self,steps):
-			self.myStepper2.step(steps, self.direction, self.style)
+		self.myStepper2.step(steps, self.direction, self.style)
 
 	def calculateLinearSteps():
 		if (self.mode == Dolly.LOCKANGLULAR):
@@ -116,6 +159,9 @@ class Dolly:
 		print("Dolly.getPositionMM = "+str(result))
 		return result
 	
+	def setDeclination(self,dec):
+		self.declination = dec
+	
 	def getPositionM(self):
 		return self.getPositionMM()/1000.0
 
@@ -131,10 +177,10 @@ class Dolly:
 		return float(self.anglecount)*float(360.0/(self.angleteeth*steps))
 
 	def linearHome(self):
-		if (self.direction == Adafruit_MotorHAT.BACKWARD):
-			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.FORWARD, self.style)
-		else:
-			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.BACKWARD, self.style)
+		self.stepDolly(self.stepcount)
+		#move dolly until oneof the interrupts fires
+		while(self.atTheEnd == 0 and self.atTheEnd == 0)
+			self.stepDolly(self.numsteps)
 		self.stepcount = 0
 		self.running = 0
 
@@ -214,5 +260,16 @@ class Dolly:
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
 		return int((dist)/(((teeth*pitch)/self.stepsPerRev)))
+	def getHeadAlignment(self):
+		accel, mag = lsm303.read()
+		accel_x, accel_y, accel_z = accel
+		mag_x, mag_y, mag_z = mag
+		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
+	def getHeading(self):
+		accel, mag = lsm303.read()
+		accel_x, accel_y, accel_z = accel
+		mag_x, mag_y, mag_z = mag
+		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
+		compassHeadin = 
 
 
