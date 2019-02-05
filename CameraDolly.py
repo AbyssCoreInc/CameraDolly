@@ -62,22 +62,27 @@ def main():
 	cam.setImageNumber(images)
 	lensHeater.setMessageBroker(mBroker)
 	initiateThreads(mBroker,lensHeater,conf)
-	
+	ts = time.time()
+	stabbuffer = conf.getStabisationBuffer()
 	print("main: going in the foreverloop (images="+str(images)+")")
 	while (1):
 		if (counter < cam.getImageNumber() and dolly.isRunning() == 1):
 			print("main: Dolly running")
 			counter = counter + 1
 			# Move dolly
+			while (time.time()<(ts+dolly.getInterval()-stabbuffer)):
+				time.sleep(0.5)
+			ts = time.time()
 			dolly.moveDolly()
 			# Wait for awhile
-			time.sleep(conf.getStabisationBuffer())
+			time.sleep(stabbuffer)
 			# Capture image
 			cam.takePicture()
 			mBroker.transmitPositionMessage(dolly.getPositionM(), dolly.getAngleDeg(), counter, dolly.getHeading(), dolly.getTilt())
 			statusMsq = "running"
 			lensHeater.setOn();
 			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")
+	
 		else:
 			statusMsq = "stopped"
 			print("main: Dolly stopped")

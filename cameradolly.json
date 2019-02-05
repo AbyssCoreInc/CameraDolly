@@ -1,6 +1,6 @@
 {
 	"configuration": {
-		"mqtt_address":"swampmill.northeurope.cloudapp.azure.com",
+		"mqtt_address":"mosquitto.org",
 		"mqtt_username":"foo",
 		"mqtt_password":"bar",
 		"mqtt_topic":"CameraDolly/",
@@ -15,6 +15,7 @@
 		"anglular_teeth":40,
 		"anglular_steps_teeth":200,
 		"stabilisationtime":1,
+		"interval":2,
 		"simulate":1
 	}
 }

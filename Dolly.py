@@ -35,6 +35,8 @@ class Dolly:
 		self.myStepper2 = self.mh.getStepper(self.stepsPerRev, 2)      # 200 steps/rev, motor port #1
 		self.myStepper2.setSpeed(self.config.getStepperSpeed())
 	
+		self.interval = self.config.getDefInterval()
+		
 		self.xdist = 0
 		self.ydist = 0
 		self.mode  = Dolly.LINEAR
@@ -278,3 +280,7 @@ class Dolly:
 		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
 		tilt = math.atan(accel_x/accel_z)
 		return tilt
+	def setInterval(self,inter):
+		self.interval = inter
+	def getInterval(self):
+		return self.interval
