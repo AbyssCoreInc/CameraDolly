@@ -83,16 +83,19 @@ class Dolly:
 			self.stepcount = self.stepcount+self.numsteps
 				
 		if (self.mode == Dolly.ANGULAR):
+			print("self.mode == Dolly.ANGULAR")
 			self.rotateHead(self.anglesteps)
 			self.anglecount = self.anglecount+self.anglesteps
 		
 		if (self.mode == Dolly.LINEARANGLULAR):
+			print("self.mode == Dolly.LINEARANGLULAR")
 			self.rotateHead(self.anglesteps)
 			self.anglecount = self.anglecount+self.anglesteps
 			self.stepDolly(self.numsteps)
 			self.stepcount = self.stepcount+self.numsteps
 
 		if (self.mode == Dolly.LOCKLINEAR):
+			print("self.mode == Dolly.LOCKLINEAR")
 			self.stepDolly(self.numsteps)
 			anglechange = self.calculateAngularSteps()
 			self.rotateHead(anglechange)
@@ -100,6 +103,7 @@ class Dolly:
 			self.stepcount = self.stepcount+self.numsteps
 
 		if (self.mode == Dolly.LOCKANGLULAR):
+			print("self.mode == Dolly.LOCKANGLULAR")
 			stepstomove = self.calculateLinearSteps()
 			
 			self.stepDolly(stepstomove)
@@ -122,6 +126,7 @@ class Dolly:
 	
 	
 	def rotateHead(self,steps):
+		print("rotateHead"+str(steps))
 		self.myStepper2.step(steps, self.direction, self.style)
 
 	def calculateLinearSteps():
