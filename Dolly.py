@@ -292,8 +292,8 @@ class Dolly:
 	def getInterval(self):
 		return self.interval
 
-    def gotoStart(self):
-        self.stop()
-        self.seekHome()
+	def gotoStart(self):
+		self.stop()
+		self.seekHome()
 
         
