@@ -306,7 +306,7 @@ class Dolly:
 		print("gotoEnd: stopped, now seeking end")
 		#move dolly until oneof the interrupts fires
 		self.direction = Adafruit_MotorHAT.FORWARD
-		while(self.atTheStart == 0):
+		while(self.atTheEnd == 0):
 			self.stepDolly(self.numsteps)
 			self.stepcount = self.stepcount+self.numsteps
 		self.direction = Adafruit_MotorHAT.BACKWARD
