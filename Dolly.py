@@ -21,8 +21,8 @@ class Dolly:
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
-		GPIO.add_event_detect(26, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
+		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
+		GPIO.add_event_detect(26, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
 		self.lsm303 = Adafruit_LSM303.LSM303()
 		
 		self.mh = motorhat
@@ -184,10 +184,10 @@ class Dolly:
 		return float(self.anglecount)*float(360.0/(self.angleteeth*steps))
 
 	def linearHome(self):
-		self.stepDolly(self.stepcount)
 		#move dolly until oneof the interrupts fires
 		print("linearHome: moving until interrupted")
 		self.direction = Adafruit_MotorHAT.BACKWARD
+		self.stepDolly(self.stepcount)
 		while(self.atTheStart == 0):
 			self.stepDolly(self.numsteps)
 		self.direction = Adafruit_MotorHAT.FORWARD
@@ -301,4 +301,16 @@ class Dolly:
 		print("gotoStart: stopped, now seeking home")
 		self.linearHome()
 
+	def gotoEnd(self):
+		self.stop()
+		print("gotoEnd: stopped, now seeking end")
+		#move dolly until oneof the interrupts fires
+		self.direction = Adafruit_MotorHAT.FORWARD
+		while(self.atTheStart == 0):
+			self.stepDolly(self.numsteps)
+			self.stepcount = self.stepcount+self.numsteps
+		self.direction = Adafruit_MotorHAT.BACKWARD
+		print("gotoEnd: ready")
+		self.stepcount = 0
+		self.running = 0
         
