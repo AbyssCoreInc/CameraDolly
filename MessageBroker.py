@@ -41,6 +41,7 @@ class MessageBroker:
 	# similar approach could be used.
 	def on_message(self,client, userdata, message):
 		msge =str(message.payload.decode("utf-8"))
+		msge = msge.strip()
 		print("message received " ,msge)
 		print("message topic=",message.topic)
 		print("message qos=",message.qos)
