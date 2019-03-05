@@ -114,11 +114,13 @@ class Dolly:
 
 	def stepDolly(self,steps):
 		if (self.direction == Adafruit_MotorHAT.FORWARD and self.atTheEnd == 0):
+			print("stepDolly FORWARD")
 			self.myStepper1.step(steps, self.direction, self.style)
 			#check if GPIO is cleared and clear the flag
 			if(GPIO.input(21) is False):
 				self.atTheStart = 0
 		if (self.direction == Adafruit_MotorHAT.BACKWARD and self.atTheStart == 0):
+			print("stepDolly BACKWARD")
 			self.myStepper1.step(steps, self.direction, self.style)
 			#check if GPIO is cleared and clear the flag
 			if(GPIO.input(26) is False):
