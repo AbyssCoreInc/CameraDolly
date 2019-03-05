@@ -186,8 +186,10 @@ class Dolly:
 	def linearHome(self):
 		self.stepDolly(self.stepcount)
 		#move dolly until oneof the interrupts fires
+		print("linearHome: moving until interrupted")
 		while(self.atTheStart == 0):
 			self.stepDolly(self.numsteps)
+		print("linearHome: ready")
 		self.stepcount = 0
 		self.running = 0
 
@@ -294,6 +296,7 @@ class Dolly:
 
 	def gotoStart(self):
 		self.stop()
+		print("gotoStart: stopped, now seeking home")
 		self.seekHome()
 
         
