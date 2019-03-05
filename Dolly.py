@@ -21,8 +21,8 @@ class Dolly:
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
-		GPIO.add_event_detect(26, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
+		GPIO.add_event_detect(26, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
+		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
 		self.lsm303 = Adafruit_LSM303.LSM303()
 		
 		self.mh = motorhat
