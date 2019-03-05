@@ -297,6 +297,6 @@ class Dolly:
 	def gotoStart(self):
 		self.stop()
 		print("gotoStart: stopped, now seeking home")
-		self.seekHome()
+		self.linearHome()
 
         
