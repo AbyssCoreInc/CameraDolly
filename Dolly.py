@@ -74,8 +74,8 @@ class Dolly:
 	def turnOffMotors(self):
 		self.mh.getMotor(1).run(Adafruit_MotorHAT.BRAKE)
 		self.mh.getMotor(2).run(Adafruit_MotorHAT.BRAKE)
-		self.mh.getMotor(3).run(Adafruit_MotorHAT.BRAKE)
-		self.mh.getMotor(4).run(Adafruit_MotorHAT.BRAKE)
+		self.mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
+		self.mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
 	
 	def moveDolly(self):
 		if (self.mode == Dolly.LINEAR):
@@ -128,7 +128,7 @@ class Dolly:
 	def rotateHead(self,steps):
 		print("rotateHead"+str(steps))
 		self.myStepper2.step(steps, self.direction, self.style)
-
+        self.myStepper2.
 	def calculateLinearSteps():
 		if (self.mode == Dolly.LOCKANGLULAR):
 			#determine X position
@@ -184,7 +184,7 @@ class Dolly:
 	def linearHome(self):
 		self.stepDolly(self.stepcount)
 		#move dolly until oneof the interrupts fires
-		while(self.atTheEnd == 0 and self.atTheEnd == 0):
+		while(self.atTheStart == 0):
 			self.stepDolly(self.numsteps)
 		self.stepcount = 0
 		self.running = 0
@@ -289,3 +289,9 @@ class Dolly:
 		self.interval = inter
 	def getInterval(self):
 		return self.interval
+
+    def gotoStart(self):
+        self.stop()
+        self.seekHome()
+
+        
