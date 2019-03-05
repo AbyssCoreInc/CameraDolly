@@ -62,6 +62,7 @@ class MessageBroker:
 		if (msg == "getstepcount"):
 			self.sendStepCount()
 		if (msg == "seekstart"):
+			print("Going to linear start")
 			self.dolly.gotoStart()
 		if (msg == "seekend"):
 			self.dolly.gotoEnd()
