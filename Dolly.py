@@ -187,8 +187,10 @@ class Dolly:
 		self.stepDolly(self.stepcount)
 		#move dolly until oneof the interrupts fires
 		print("linearHome: moving until interrupted")
+		self.direction = Adafruit_MotorHAT.BACKWARD
 		while(self.atTheStart == 0):
 			self.stepDolly(self.numsteps)
+		self.direction = Adafruit_MotorHAT.FORWARD
 		print("linearHome: ready")
 		self.stepcount = 0
 		self.running = 0
