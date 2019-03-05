@@ -128,8 +128,8 @@ class Dolly:
 	def rotateHead(self,steps):
 		print("rotateHead"+str(steps))
 		self.myStepper2.step(steps, self.direction, self.style)
-        self.mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
-        self.mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+		self.mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
+		self.mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
         
 	def calculateLinearSteps():
 		if (self.mode == Dolly.LOCKANGLULAR):
