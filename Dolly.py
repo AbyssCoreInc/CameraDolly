@@ -136,8 +136,12 @@ class Dolly:
 	def rotateHead(self,steps):
 		print("rotateHead"+str(steps))
 		count = 0
+		if (steps < 0):
+			dir = STEPPER.FORWARD
+		else:
+			dir = STEPPER.BACKWARD
 		while (count < steps):
-			self.myStepper2.onestep(direction=self.direction, style=self.style)
+			self.myStepper2.onestep(direction=dir, style=self.style)
 			count = count + 1
 		self.myStepper2.release()
         

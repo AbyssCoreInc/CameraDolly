@@ -87,10 +87,10 @@ class MessageBroker:
 			self.dolly.setOperationModes(int(setting))
 		if (msg == "settargetx"):
 			print("on_message: set tracking X to "+setting)
-			self.dolly.setTrackingX(int(setting))
+			self.dolly.setTrackingX(float(setting))
 		if (msg == "settargety"):
 			print("on_message: set tracking Y to "+setting)
-			self.dolly.setTrackingY(int(setting))
+			self.dolly.setTrackingY(float(setting))
 		if (msg == "setstepdistance"):
 			print("on_message: set step distance to "+setting)
 			self.dolly.setStepDistance(int(setting))
