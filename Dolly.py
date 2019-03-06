@@ -154,6 +154,7 @@ class Dolly:
 			#delta is the angle in new position
 			delta  = alpha - self.angleStepsToRad(self.anglesteps)
 			# determine how much x_component need to be moved
+			print("calculateLinearSteps x_comp:"+str(x_comp)+" alpha:"+str(alpha)+" delta:"+str(delta))
 			return self.distanceToStepsM(math.tan(delta)*y_comp)
 		else:
 			return 0
@@ -163,10 +164,12 @@ class Dolly:
 			# position where we start
 			x_comp = self.xdist-self.stepsToDistanceM(self.stepcount)
 			y_comp = self.ydist
-			alpha  = math.atan(x_comp/y_comp) # radians of the fitst position
+			alpha  = math.atan(x_comp/y_comp) # radians of the first position
 			#delta is the angle in new position
 			x_delta = self.xdist-self.stepsToDistanceM(self.stepcount+self.numsteps)
+			#x_delta =
 			delta  = alpha - math.atan(x_delta/y_comp)
+			print("calculateAngularSteps x_comp:"+str(x_comp)+" alpha:"+str(alpha)+" delta:"+str(delta))
 			# determine how much x_component need to be moved
 			return self.radiansToSteps(delta)
 		else:
