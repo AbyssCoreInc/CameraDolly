@@ -140,7 +140,7 @@ class Dolly:
 			count = count + 1
 		self.myStepper2.release()
         
-	def calculateLinearSteps():
+	def calculateLinearSteps(self):
 		if (self.mode == Dolly.LOCKANGLULAR):
 			#determine X position
 			x_comp = self.xdist-self.stepsToDistanceM(self.stepcount)
@@ -153,7 +153,7 @@ class Dolly:
 		else:
 			return 0
 				
-	def calculateAngularSteps():
+	def calculateAngularSteps(self):
 		if (self.mode == Dolly.LOCKLINEAR):
 			# position where we start
 			x_comp = self.xdist-self.stepsToDistanceM(self.stepcount)
