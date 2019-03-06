@@ -124,19 +124,26 @@ class Dolly:
 			self.anglecount = self.anglecount+self.anglesteps
 
 	def stepDolly(self,steps):
+		count = 0
 		if (self.direction == Adafruit_MotorHAT.FORWARD and self.atTheEnd == 0):
 			print("stepDolly FORWARD")
-			self.myStepper1.step(steps, self.direction, self.style)
-			#check if GPIO is cleared and clear the flag
-			if(GPIO.input(21) is False):
-				self.atTheStart = 0
+			#self.myStepper1.step(steps, self.direction, self.style)
+			while (count < steps):
+				self.myStepper1.onestep(self.direction, self.style)
+				#check if GPIO is cleared and clear the flag
+				if(GPIO.input(21) is False):
+					self.atTheStart = 0
+				count = count + 1
 		if (self.direction == Adafruit_MotorHAT.BACKWARD and self.atTheStart == 0):
 			print("stepDolly BACKWARD")
-			self.myStepper1.step(steps, self.direction, self.style)
+			#self.myStepper1.step(steps, self.direction, self.style)
 			#check if GPIO is cleared and clear the flag
-			if(GPIO.input(26) is False):
-				self.atTheEnd = 0
-	
+			
+			while (count < steps):
+				self.myStepper1.onestep(self.direction, self.style)
+				if(GPIO.input(26) is False):
+					self.atTheEnd = 0
+				count = count + 1
 	
 	def rotateHead(self,steps):
 		print("rotateHead"+str(steps))
