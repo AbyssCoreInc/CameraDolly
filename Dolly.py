@@ -161,7 +161,7 @@ class Dolly:
 			alpha  = math.atan(x_comp/y_comp) # radians of the fitst position
 			#delta is the angle in new position
 			x_delta = self.xdist-self.stepsToDistanceM(self.stepcount+self.numsteps)
-			delta  = alhpa - math.atan(x_delta/y_comp)
+			delta  = alpha - math.atan(x_delta/y_comp)
 			# determine how much x_component need to be moved
 			return self.radiansToSteps(delta)
 		else:
