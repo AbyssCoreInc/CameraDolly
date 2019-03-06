@@ -174,8 +174,8 @@ class Dolly:
 			
 			steps = self.radiansToSteps(delta)
 			# atan does not preserve positive so alter that manually if x_comp is negative
-			if (x_comp < 0):
-				steps = steps * -1
+			#if (x_comp < 0):
+			# 	steps = steps * -1
 			# determine how much x_component need to be moved
 			print("calculateAngularSteps x_comp:"+str(x_comp)+" alpha:"+str(alpha)+" delta:"+str(delta) + " steps:"+str(steps))
 			return steps
