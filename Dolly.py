@@ -147,7 +147,7 @@ class Dolly:
 			y_comp = self.ydist
 			alpha  = math.atan(x_comp/y_comp) # radians
 			#delta is the angle in new position
-			delta  = alhpa - self.angleStepsToRad(self.anglesteps)
+			delta  = alpha - self.angleStepsToRad(self.anglesteps)
 			# determine how much x_component need to be moved
 			return self.distanceToStepsM(math.tan(delta)*y_comp)
 		else:
