@@ -136,7 +136,7 @@ class Dolly:
 		print("rotateHead"+str(steps))
 		count = 0
 		while (count < steps):
-			self.myStepper2.step(steps, self.direction, self.style)
+			self.myStepper2.onestep(direction=self.direction, style=self.style)
 			count = count + 1
 		self.myStepper2.release()
         
