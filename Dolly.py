@@ -129,7 +129,7 @@ class Dolly:
 			print("stepDolly FORWARD")
 			#self.myStepper1.step(steps, self.direction, self.style)
 			while (count < steps):
-				self.myStepper1.onestep(self.direction, self.style)
+				self.myStepper1.onestep(direction=self.direction, style=self.style)
 				#check if GPIO is cleared and clear the flag
 				if(GPIO.input(21) is False):
 					self.atTheStart = 0
@@ -140,16 +140,18 @@ class Dolly:
 			#check if GPIO is cleared and clear the flag
 			
 			while (count < steps):
-				self.myStepper1.onestep(self.direction, self.style)
+				self.myStepper1.onestep(direction=self.direction, style=self.style)
 				if(GPIO.input(26) is False):
 					self.atTheEnd = 0
 				count = count + 1
 	
 	def rotateHead(self,steps):
 		print("rotateHead"+str(steps))
-		self.myStepper2.step(steps, self.direction, self.style)
-		self.mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
-		self.mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+		count = 0
+		while (count < steps):
+			self.myStepper2.step(steps, self.direction, self.style)
+			count = count + 1
+		self.myStepper2.release()
         
 	def calculateLinearSteps():
 		if (self.mode == Dolly.LOCKANGLULAR):
