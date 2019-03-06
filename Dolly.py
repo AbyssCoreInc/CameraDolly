@@ -96,6 +96,7 @@ class Dolly:
 			print("self.mode == Dolly.LOCKLINEAR")
 			self.stepDolly(self.numsteps)
 			anglechange = self.calculateAngularSteps()
+			print("LOCKLINEAR anglechange = "+str(anglechange))
 			self.rotateHead(anglechange)
 			self.anglecount = self.anglecount+anglechange
 			self.stepcount = self.stepcount+self.numsteps
@@ -103,7 +104,7 @@ class Dolly:
 		if (self.mode == Dolly.LOCKANGLULAR):
 			print("self.mode == Dolly.LOCKANGLULAR")
 			stepstomove = self.calculateLinearSteps()
-			
+			print("LOCKANGLULAR stepstomove = "+str(stepstomove))
 			self.stepDolly(stepstomove)
 			self.stepcount = self.stepcount+stepstomove
 			
