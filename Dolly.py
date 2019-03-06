@@ -138,6 +138,7 @@ class Dolly:
 		count = 0
 		if (steps < 0):
 			dir = STEPPER.FORWARD
+			steps = steps * -1
 		else:
 			dir = STEPPER.BACKWARD
 		while (count < steps):
