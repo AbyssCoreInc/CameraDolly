@@ -3,7 +3,6 @@ import time
 import math
 from Configuration import *
 from MessageBroker import *
-from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_StepperMotor
 import Adafruit_LSM303
 import RPi.GPIO as GPIO
 from adafruit_motorkit import MotorKit
@@ -27,18 +26,12 @@ class Dolly:
 		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
 		self.lsm303 = Adafruit_LSM303.LSM303()
 		
-		self.mkit = MotorKit(0x66)
-		
-		#self.mh = motorhat
+		self.mkit = MotorKit(address=0x66)
+
 		self.config = configuration
 		self.running = 0
 		self.stepsPerRev = self.config.getStepsPerRev()
-		#self.myStepper1 = self.mh.getStepper(self.stepsPerRev, 1)      # 200 steps/rev, motor port #1
-		#self.myStepper1.setSpeed(self.config.getStepperSpeed())
-		
-		#self.myStepper2 = self.mh.getStepper(self.stepsPerRev, 2)      # 200 steps/rev, motor port #1
-		#self.myStepper2.setSpeed(self.config.getStepperSpeed())
-	
+
 		self.myStepper1 = self.mkit.stepper1
 		self.myStepper2 = self.mkit.stepper2
 	
