@@ -6,6 +6,8 @@ from MessageBroker import *
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_StepperMotor
 import Adafruit_LSM303
 import RPi.GPIO as GPIO
+from adafruit_motorkit import MotorKit
+from adafruit_motor import stepper as STEPPER
 
 
 class Dolly:
@@ -25,15 +27,20 @@ class Dolly:
 		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
 		self.lsm303 = Adafruit_LSM303.LSM303()
 		
+		self.mkit = MotorKit()
+		
 		self.mh = motorhat
 		self.config = configuration
 		self.running = 0
 		self.stepsPerRev = self.config.getStepsPerRev()
-		self.myStepper1 = self.mh.getStepper(self.stepsPerRev, 1)      # 200 steps/rev, motor port #1
-		self.myStepper1.setSpeed(self.config.getStepperSpeed())
+		#self.myStepper1 = self.mh.getStepper(self.stepsPerRev, 1)      # 200 steps/rev, motor port #1
+		#self.myStepper1.setSpeed(self.config.getStepperSpeed())
 		
-		self.myStepper2 = self.mh.getStepper(self.stepsPerRev, 2)      # 200 steps/rev, motor port #1
-		self.myStepper2.setSpeed(self.config.getStepperSpeed())
+		#self.myStepper2 = self.mh.getStepper(self.stepsPerRev, 2)      # 200 steps/rev, motor port #1
+		#self.myStepper2.setSpeed(self.config.getStepperSpeed())
+	
+		self.myStepper1 = mkit.stepper1
+		self.myStepper2 = mkit.stepper2
 	
 		self.interval = self.config.getDefInterval()
 		
@@ -53,9 +60,10 @@ class Dolly:
 		self.anglecount = 0
 		self.numsteps = self.config.getStepsPerFrame()
 		self.anglesteps = 0  # steps to rotate camera per frame (used in LocAngular and Anglular modes)
-		self.direction = Adafruit_MotorHAT.BACKWARD
-		self.style = Adafruit_MotorHAT.DOUBLE
-	
+		#self.direction = Adafruit_MotorHAT.BACKWARD
+		#self.style = Adafruit_MotorHAT.DOUBLE
+		self.direction = STEPPER.FORWARD
+		self.style = STEPPER.DOUBLE
 		self.angleteeth = self.config.getAngularTeeth()
 		self.anglestepsperteeth = self.config.getAngularStepsPerTeeth()
 	
@@ -72,10 +80,13 @@ class Dolly:
 	
 	#recommended for auto-disabling motors on shutdown!
 	def turnOffMotors(self):
-		self.mh.getMotor(1).run(Adafruit_MotorHAT.BRAKE)
-		self.mh.getMotor(2).run(Adafruit_MotorHAT.BRAKE)
-		self.mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
-		self.mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+		#self.mh.getMotor(1).run(Adafruit_MotorHAT.BRAKE)
+		#self.mh.getMotor(2).run(Adafruit_MotorHAT.BRAKE)
+		#self.mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
+		#self.mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+		kit.stepper1.brake()
+		kit.stepper2.release()
+		
 	
 	def moveDolly(self):
 		if (self.mode == Dolly.LINEAR):
