@@ -304,7 +304,9 @@ class Dolly:
 		accel_x, accel_y, accel_z = accel
 		mag_x, mag_y, mag_z = mag
 		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
-		compassHeadin = math.atan(mag_y/mag_x)
+		compassHeadin = 0
+		if (mag_x != 0):
+			compassHeadin = math.atan(mag_y/mag_x)
 		return compassHeadin
 
 	def getTilt(self):
@@ -312,7 +314,9 @@ class Dolly:
 		accel_x, accel_y, accel_z = accel
 		mag_x, mag_y, mag_z = mag
 		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
-		tilt = math.atan(accel_x/accel_z)
+		tilt = 0
+		if (accel_z != 0):
+			tilt = math.atan(accel_x/accel_z)
 		return tilt
 	def setInterval(self,inter):
 		self.interval = inter
