@@ -53,8 +53,6 @@ class Dolly:
 		self.anglecount = 0
 		self.numsteps = self.config.getStepsPerFrame()
 		self.anglesteps = 0  # steps to rotate camera per frame (used in LocAngular and Anglular modes)
-		#self.direction = Adafruit_MotorHAT.BACKWARD
-		#self.style = Adafruit_MotorHAT.DOUBLE
 		self.direction = STEPPER.FORWARD
 		self.style = STEPPER.DOUBLE
 		self.angleteeth = self.config.getAngularTeeth()
@@ -73,11 +71,7 @@ class Dolly:
 	
 	#recommended for auto-disabling motors on shutdown!
 	def turnOffMotors(self):
-		#self.mh.getMotor(1).run(Adafruit_MotorHAT.BRAKE)
-		#self.mh.getMotor(2).run(Adafruit_MotorHAT.BRAKE)
-		#self.mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
-		#self.mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
-		kit.stepper1.brake()
+		kit.stepper1.release()
 		kit.stepper2.release()
 		
 	
@@ -118,7 +112,7 @@ class Dolly:
 
 	def stepDolly(self,steps):
 		count = 0
-		if (self.direction == Adafruit_MotorHAT.FORWARD and self.atTheEnd == 0):
+		if (self.direction == STEPPER.FORWARD and self.atTheEnd == 0):
 			print("stepDolly FORWARD")
 			#self.myStepper1.step(steps, self.direction, self.style)
 			while (count < steps):
@@ -127,7 +121,7 @@ class Dolly:
 				if(GPIO.input(21) is False):
 					self.atTheStart = 0
 				count = count + 1
-		if (self.direction == Adafruit_MotorHAT.BACKWARD and self.atTheStart == 0):
+		if (self.direction == STEPPER.BACKWARD and self.atTheStart == 0):
 			print("stepDolly BACKWARD")
 			#self.myStepper1.step(steps, self.direction, self.style)
 			#check if GPIO is cleared and clear the flag
@@ -201,11 +195,11 @@ class Dolly:
 	def linearHome(self):
 		#move dolly until oneof the interrupts fires
 		print("linearHome: moving until interrupted")
-		self.direction = Adafruit_MotorHAT.BACKWARD
+		self.direction = STEPPER.BACKWARD
 		self.stepDolly(self.stepcount)
 		while(self.atTheStart == 0):
 			self.stepDolly(self.numsteps)
-		self.direction = Adafruit_MotorHAT.FORWARD
+		self.direction = STEPPER.FORWARD
 		print("linearHome: ready")
 		self.stepcount = 0
 		self.running = 0
@@ -246,10 +240,10 @@ class Dolly:
 	
 	# Move andular axis to home and set counter to zero
 	def anglularHome(self):
-		if (self.direction == Adafruit_MotorHAT.BACKWARD):
-			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.FORWARD, self.style)
+		if (self.direction == STEPPER.BACKWARD):
+			self.myStepper1.step(self.stepcount, STEPPER.FORWARD, self.style)
 		else:
-			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.BACKWARD, self.style)
+			self.myStepper1.step(self.stepcount, STEPPER.BACKWARD, self.style)
 		self.anglestepcount = 0
 		self.running = 0
 
@@ -320,11 +314,11 @@ class Dolly:
 		self.stop()
 		print("gotoEnd: stopped, now seeking end")
 		#move dolly until oneof the interrupts fires
-		self.direction = Adafruit_MotorHAT.FORWARD
+		self.direction = STEPPER.FORWARD
 		while(self.atTheEnd == 0):
 			self.stepDolly(self.numsteps)
 			self.stepcount = self.stepcount+self.numsteps
-		self.direction = Adafruit_MotorHAT.BACKWARD
+		self.direction = STEPPER.BACKWARD
 		print("gotoEnd: ready")
 		self.stepcount = 0
 		self.running = 0
