@@ -27,7 +27,7 @@ class Dolly:
 		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
 		self.lsm303 = Adafruit_LSM303.LSM303()
 		
-		self.mkit = MotorKit()
+		self.mkit = MotorKit(0x66)
 		
 		self.mh = motorhat
 		self.config = configuration
