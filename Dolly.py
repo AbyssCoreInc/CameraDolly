@@ -155,6 +155,7 @@ class Dolly:
 			delta  = alpha - self.angleStepsToRad(self.anglesteps)
 			# determine how much x_component need to be moved
 			print("calculateLinearSteps x_comp:"+str(x_comp)+" alpha:"+str(alpha)+" delta:"+str(delta))
+			
 			return self.distanceToStepsM(math.tan(delta)*y_comp)
 		else:
 			return 0
@@ -170,8 +171,12 @@ class Dolly:
 			#x_delta =
 			delta  = alpha - math.atan(x_delta/y_comp)
 			print("calculateAngularSteps x_comp:"+str(x_comp)+" alpha:"+str(alpha)+" delta:"+str(delta))
+			steps = self.radiansToSteps(delta)
+			# atan does not preserve positive so alter that manually if x_comp is negative
+			if (x_comp < 0):
+				steps = steps * -1
 			# determine how much x_component need to be moved
-			return self.radiansToSteps(delta)
+			return
 		else:
 			return 0
 
