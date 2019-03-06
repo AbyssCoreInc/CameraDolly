@@ -29,7 +29,7 @@ class Dolly:
 		
 		self.mkit = MotorKit(0x66)
 		
-		self.mh = motorhat
+		#self.mh = motorhat
 		self.config = configuration
 		self.running = 0
 		self.stepsPerRev = self.config.getStepsPerRev()
@@ -39,8 +39,8 @@ class Dolly:
 		#self.myStepper2 = self.mh.getStepper(self.stepsPerRev, 2)      # 200 steps/rev, motor port #1
 		#self.myStepper2.setSpeed(self.config.getStepperSpeed())
 	
-		self.myStepper1 = mkit.stepper1
-		self.myStepper2 = mkit.stepper2
+		self.myStepper1 = self.mkit.stepper1
+		self.myStepper2 = self.mkit.stepper2
 	
 		self.interval = self.config.getDefInterval()
 		
