@@ -67,7 +67,7 @@ def main():
 	print("main: going in the foreverloop (images="+str(images)+")")
 	while (1):
 		if (counter < cam.getImageNumber() and dolly.isRunning() == 1):
-			print("main: Dolly running interval "+str((time.time()<(ts+dolly.getInterval()-stabbuffer))))
+			print("main: Dolly running interval "+str((time.time()-(ts+dolly.getInterval()-stabbuffer))))
 			counter = counter + 1
 			# wait until enough time has passed since last photo. 
 			while (time.time()<(ts+dolly.getInterval()-stabbuffer)):
