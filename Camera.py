@@ -98,6 +98,9 @@ class Camera:
 		self.aperture = gp.check_result(gp.gp_widget_get_value(childitem))
 		print("current aperture: ",str(self.aperture))
 
+	def setShutterSpeedIndx(self,index):
+		self.setShutterSpeed(self.shutterspeed[index])
+	
 	def setShutterSpeed(self,speed):
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'shutterspeed2'))
 		gp.check_result(gp.gp_widget_set_value(capture_target, speed))
@@ -107,6 +110,9 @@ class Camera:
 	def getShutterSpeed(self):
 		return self.shutterspeed
 	
+	def setApertureIndx(self,index):
+		self.setAperture(self.apertures[index])
+	
 	def setAperture(self,aperture):
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'f-number'))
 		gp.check_result(gp.gp_widget_set_value(capture_target, aperture))
@@ -115,6 +121,9 @@ class Camera:
 	
 	def getAperture(self):
 		return self.aperture
+	
+	def setISOIndx(self, index):
+		self.setISO(self.isos[index])
 	
 	def setISO(self,iso):
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'iso'))
