@@ -1,3 +1,4 @@
+
 import gphoto2 as gp
 import logging
 import time
@@ -12,6 +13,7 @@ class Camera:
 		self.running = 0
 		self.cameramodel = "unknown"
 		self.images = 1000
+		#self.camconfig = ""
 
 	def setMessageBroker(self,messagebroker):
 		self.mBroker = messagebroker
@@ -26,7 +28,7 @@ class Camera:
 			try:
 				gp.gp_camera_init(self.camera,context)
 				#self.camera.init(context)
-				camconfig = gp.check_result(gp.gp_camera_get_config(self.camera))
+				self.camconfig = gp.check_result(gp.gp_camera_get_config(self.camera))
 			except gp.GPhoto2Error as ex:
 				print("BUIUYAAH")
 				# no camera, try again in 2 seconds
@@ -34,28 +36,40 @@ class Camera:
 				continue
 			# operation completed successfully so exit loop
 			break
-		#gp.check_result(gp.gp_camera_init(self.camera,context))
-		#camconfig = gp.check_result(gp.gp_camera_get_config(self.camera))
 		# find the capture target config item
-		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(camconfig, 'capturetarget'))
-		# print current setting
+		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'capturetarget'))
 		value = gp.check_result(gp.gp_widget_get_value(capture_target))
 		print('Current setting:', value)
-		# print possible settings
 		for n in range(gp.check_result(gp.gp_widget_count_choices(capture_target))):
 			choice = gp.check_result(gp.gp_widget_get_choice(capture_target, n))
 			print('Choice:', n, choice)
 
 		gp.check_result(gp.gp_widget_set_value(capture_target, "Memory card"))
-		gp.check_result(gp.gp_camera_set_config(self.camera, camconfig, context))
+		gp.check_result(gp.gp_camera_set_config(self.camera, self.camconfig, context))
 
 		abilities = gp.check_result(gp.gp_camera_get_abilities(self.camera))
 		self.cameramodel = abilities.model
 		
-		# try to read shutter speeds
-		text = gp.gp_camera_get_summary(self.camera)
-		print(text[0].text)
-		
+		# try to read shutter spekkeds
+		for child in gp.check_result(gp.gp_widget_get_children(self.camconfig)):
+			label = gp.check_result(gp.gp_widget_get_label(child))
+			name = gp.check_result(gp.gp_widget_get_name(child))
+			child_type = gp.gp_widget_get_type(child)
+			print("cam conf: "+label+" : "+name+" type: ")
+
+		#childitem = gp.gp_widget_get_child_by_name(self.camconfig, 'imgsettings')
+		childitem = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'shutterspeed2'))
+		print("shutterspeed = "+str(childitem))
+
+		#capture_settings = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'imgsettings'))
+#		print("number of chouses:"+range(gp.gp_widget_count_choices(childitem)))
+		k = 0
+		while (k <  gp.gp_widget_count_choices(childitem)):
+			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
+			print('setting:', k, setting)
+			k = k+1
+		speedvalue = gp.check_result(gp.gp_widget_get_value(childitem))
+		print("current shutterspeed: ",str(speedvalue))
 
 	def setShutterSpeed(self,speed):
 		return 0
