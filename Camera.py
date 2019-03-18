@@ -73,7 +73,7 @@ class Camera:
 		while (k <  gp.gp_widget_count_choices(childitem)):
 			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
 			self.shutterspeeds.append(setting)
-			print('setting:', k, setting)
+			#print('setting:', k, setting)
 			k = k+1
 		self.shutterspeed = gp.check_result(gp.gp_widget_get_value(childitem))
 		print("current shutterspeed: ",str(self.shutterspeed))
@@ -83,7 +83,7 @@ class Camera:
 		while (k <  gp.gp_widget_count_choices(childitem)):
 			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
 			self.isos.append(setting)
-			print('setting:', k, setting)
+			#print('setting:', k, setting)
 			k = k+1
 		self.iso = gp.check_result(gp.gp_widget_get_value(childitem))
 		print("current ISO: ",str(self.iso))
@@ -93,14 +93,38 @@ class Camera:
 		while (k <  gp.gp_widget_count_choices(childitem)):
 			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
 			self.apertures.append(setting)
-			print('setting:', k, setting)
+			#print('setting:', k, setting)
 			k = k+1
 		self.aperture = gp.check_result(gp.gp_widget_get_value(childitem))
 		print("current aperture: ",str(self.aperture))
 
 	def setShutterSpeed(self,speed):
-		return 0
+		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'shutterspeed2'))
+		gp.check_result(gp.gp_widget_set_value(capture_target, speed))
+		gp.check_result(gp.gp_camera_set_config(self.camera, self.camconfig, context))
+		self.shutterspeed = speed
 
+	def getShutterSpeed(self):
+		return self.shutterspeed
+	
+	def setAperture(self,aperture):
+		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'f-number'))
+		gp.check_result(gp.gp_widget_set_value(capture_target, aperture))
+		gp.check_result(gp.gp_camera_set_config(self.camera, self.camconfig, context))
+		self.aperture = aperture
+	
+	def getAperture(self):
+		return self.aperture
+	
+	def setISO(self,iso):
+		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'iso'))
+		gp.check_result(gp.gp_widget_set_value(capture_target, iso))
+		gp.check_result(gp.gp_camera_set_config(self.camera, self.camconfig, context))
+		self.iso = iso
+
+	def getISO(self):
+		return self.iso
+	
 	def takePicture(self):
 		if (self.config.isSimulation() == 0):
 			file_path = gp.check_result(gp.gp_camera_capture(self.camera, gp.GP_CAPTURE_IMAGE))
