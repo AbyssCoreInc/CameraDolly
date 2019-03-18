@@ -54,7 +54,7 @@ class Camera:
 		
 		# try to read shutter speeds
 		text = gp.gp_camera_get_summary(self.camera)
-		print(text[0])
+		print(text[0].text)
 		
 
 	def setShutterSpeed(self,speed):
