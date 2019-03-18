@@ -13,6 +13,12 @@ class Camera:
 		self.running = 0
 		self.cameramodel = "unknown"
 		self.images = 1000
+		self.shutterspeeds = list()
+		self.shutterspeed = ""
+		self.aperturess = list()
+		self.aperture = ""
+		self.isos = list()
+		self.iso = ""
 		#self.camconfig = ""
 
 	def setMessageBroker(self,messagebroker):
@@ -66,10 +72,31 @@ class Camera:
 		k = 0
 		while (k <  gp.gp_widget_count_choices(childitem)):
 			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
+			self.shutterspeeds.append(setting)
 			print('setting:', k, setting)
 			k = k+1
-		speedvalue = gp.check_result(gp.gp_widget_get_value(childitem))
-		print("current shutterspeed: ",str(speedvalue))
+		self.shutterspeed = gp.check_result(gp.gp_widget_get_value(childitem))
+		print("current shutterspeed: ",str(self.shutterspeed))
+
+		childitem = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'f-stop'))
+		k = 0
+		while (k <  gp.gp_widget_count_choices(childitem)):
+			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
+			self.apertures.append(setting)
+			print('setting:', k, setting)
+			k = k+1
+		self.aperture = gp.check_result(gp.gp_widget_get_value(childitem))
+		print("current aperture: ",str(self.aperture))
+		
+		childitem = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'iso'))
+		k = 0
+		while (k <  gp.gp_widget_count_choices(childitem)):
+			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
+			self.isos.append(setting)
+			print('setting:', k, setting)
+			k = k+1
+		self.iso = gp.check_result(gp.gp_widget_get_value(childitem))
+		print("current ISO: ",str(self.iso))
 
 	def setShutterSpeed(self,speed):
 		return 0
