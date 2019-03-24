@@ -57,6 +57,8 @@ class MessageBroker:
 			self.dolly.stop()
 		if (msg == "cammodel"):
 			self.transmitCameraModel()
+		if (msg == "camsettinglists"):
+			self.transmitCameraSettingsLists()
 		if (msg == "getstepsize"):
 			self.sendStepSize()
 		if (msg == "getstepcount"):
@@ -194,6 +196,48 @@ class MessageBroker:
 		message = message + "\t\t\t\"name\":\"cameramodel\",\n"
 		message = message + "\t\t\t\"type\":\"string\",\n"
 		message = message + "\t\t\t\"value\":\""+self.camera.getCameraModel()+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"shutterspeed\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+self.camera.getShutterSpeedIndx()+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"aperture\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+self.camera.getApertureIndx()+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"isovalue\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+self.camera.getISOIndx()+"\"\n"
+		message = message + "\t\t}\n"
+		message = message + "\t],\n"
+		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
+		message = message + "\t}\n]}"
+		self.transmitdata(message,self.conf.getTopic()+"CameraModelMessage")
+	
+	# Method for transmitting camera model string
+	# Sends camera model to subsribers
+	def transmitCameraSettingsLists(self):
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n"
+		message = message + self.getDollyIDField()+",\n"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"sppertureList\",\n"
+		message = message + "\t\t\t\"type\":\"string\",\n"
+		message = message + "\t\t\t\"value\":\""+self.camera.getAppertureList()+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"shutterspeedList\",\n"
+		message = message + "\t\t\t\"type\":\"string\",\n"
+		message = message + "\t\t\t\"value\":\""+self.camera.getShutterSpeedList()+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"isoList\",\n"
+		message = message + "\t\t\t\"type\":\"string\",\n"
+		message = message + "\t\t\t\"value\":\""+self.camera.getISOList()+"\"\n"
 		message = message + "\t\t}\n"
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"
