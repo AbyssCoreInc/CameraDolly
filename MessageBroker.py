@@ -49,9 +49,8 @@ class MessageBroker:
 		if (len(msge.split("-")) != 2):
 			msg = msge
 		else:
-			msg,
-setting = msge.split("-")
-		
+			msg,setting = msge.split("-")
+
 		if (msg == "start"):
 			self.dolly.start()
 		if (msg == "stop"):
@@ -164,7 +163,26 @@ setting = msge.split("-")
 		print("transmitCameraSettings")
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + "\t\"attributes\": [\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\tsspeeds\":["
+		speeds = self.camera.getShutterSpeedList()
+		print("shutter speeds: "+speeds)
+		message = message + speeds
+		message = message + "\t\t\t],\n"
+		message = message + "\t\t\tapertures\":["
+		apertures = self.camera.getApertureList()
+		print("apertures: "+apertures)
+		message = message + apertures
+		message = message + "\t\t\t],\n"
+		message = message + "\t\t\tisos\":["
+		isos = self.camera.getISOList()
+		print("ISOs: "+isos)
+		message = message + isos
+		message = message + "\t\t\t]\n"
+		message = message + "\t\t}\n\t]\n"
 		message = message + "\t}\n]}"
+		self.transmitdata(message,self.conf.getTopic()+"CameraMessage")
 
 	# Method for transmitting dolly position status message
 	# Sends position on rail, angle of the camera head and number of images taken

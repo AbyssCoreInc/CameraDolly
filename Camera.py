@@ -92,7 +92,7 @@ class Camera:
 		k = 0
 		while (k <  gp.gp_widget_count_choices(childitem)):
 			setting = gp.check_result(gp.gp_widget_get_choice(childitem, k))
-			self.apertures.append(setting)
+			self.apertures.append(str(setting))
 			#print('setting:', k, setting)
 			k = k+1
 		self.aperture = gp.check_result(gp.gp_widget_get_value(childitem))
@@ -106,7 +106,7 @@ class Camera:
 		retval = ""
 		index = 0
 		while (index < len(self.shutterspeeds)):
-			retval = retval + self.shutterspeeds[index]
+			retval = retval + "\"" +self.shutterspeeds[index] + "\""
 			index = index + 1
 			if (index < len(self.shutterspeeds)):
 				retval = retval + ","
@@ -127,12 +127,15 @@ class Camera:
 		return self.apertures.index(self.aperture)
 	def getApertureList(self):
 		retval = ""
+		print("getApertureList: "+ str(len(self.apertures)))
 		index = 0
-		while (index < len(self.appertures)):
-			retval = retval + self.appertures[index]
+		while (index < len(self.apertures)):
+			print(self.apertures[index])
+			retval = retval + "\"" + self.apertures[index] + "\""
 			index = index + 1
-			if (index < len(self.appertures)):
+			if (index < len(self.apertures)):
 				retval = retval + ","
+		print("getApertureList ret: "+retval)
 		return retval
 	
 	def setAperture(self,aperture):
@@ -152,7 +155,7 @@ class Camera:
 		retval = ""
 		index = 0
 		while (index < len(self.isos)):
-			retval = retval + self.isos[index]
+			retval = retval + "\"" + self.isos[index] + "\""
 			index = index + 1
 			if (index < len(self.isos)):
 				retval = retval + ","
