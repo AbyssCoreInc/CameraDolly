@@ -79,7 +79,7 @@ def main():
 			time.sleep(stabbuffer)
 			# Capture image
 			cam.takePicture()
-			mBroker.transmitPositionMessage(dolly.getPositionM(), dolly.getAngleDeg(), counter, dolly.getHeading(), dolly.getTilt())
+			mBroker.transmitPositionMessage(dolly.getPositionM(), dolly.getAngleDeg(), counter, dolly.getHeading(), dolly.getTilt(),dolly.getTemp(),dolly.getVoltage())
 			statusMsq = "running"
 			lensHeater.setOn();
 			mBroker.transmitdata(statusMsq, conf.getTopic()+"StatusMessage")

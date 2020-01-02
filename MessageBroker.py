@@ -18,7 +18,7 @@ class MessageBroker:
 	uname = "name"
 	passwd = "passwd"
 	type = "MQTT"
-	
+
 	def __init__(self, conf,camera,dolly,heater):
 		# connec to server REST interface
 		self.conf = conf
@@ -49,7 +49,8 @@ class MessageBroker:
 		if (len(msge.split("-")) != 2):
 			msg = msge
 		else:
-			msg,setting = msge.split("-")
+			msg,
+setting = msge.split("-")
 		
 		if (msg == "start"):
 			self.dolly.start()
@@ -76,7 +77,7 @@ class MessageBroker:
 		if (msg == "getinterval"):
 			self.sendImageInterval()
 		if (msg == "getposition"):
-			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter(),dolly.getHeading(),dolly.getTilt())
+			self.transmitPositionMessage(dolly.getPositionMM, dolly.getAngleDeg(), getCounter(),dolly.getHeading(),dolly.getTilt(),dolly.getTemp(),dolly.getVoltage())
 		if (msg == "getheatsetting"):
 			self.transmitHeatSetting()
 		if (msg == "setheat"):
@@ -112,12 +113,23 @@ class MessageBroker:
 		if (msg == "interval"):
 			print("on_message: set interval "+setting)
 			self.dolly.setInterval(float(setting))
-			
+		if (msg == "rotateccw"):
+			print("on_message:rotate CCW ")
+			self.dolly.rotateCCW()
+		if (msg == "rotatecw"):
+			print("on_message:rotate CW ")
+			self.dolly.rotateCW()
+		if (msg == "head_off"):
+			print("on_message:head off ")
+			self.dolly.headOff()
+		if (msg == "rcamsettings"):
+			self.transmitCameraSettings()
+
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
 		self.client.connect(self.mqtturl,port=1883)
 		print("DataTransmitter.connect ready")
-	
+
 	def getTimeStamp(self):
 		ts = time.time()
 		utcts = datetime.utcfromtimestamp(ts)
@@ -145,10 +157,16 @@ class MessageBroker:
 		field = field + "\t\"type\":\"dolly\",\n"
 		field = field + "\t\"isPattern\":\"false\""
 		return field
-	
+
+	def transmitCameraSettings(self):
+		print("transmitCameraSettings")
+		message = "{\n"
+		message = message + "\"contextElements\": [\n\t{\n\t"
+		message = message + "\t}\n]}"
+
 	# Method for transmitting dolly position status message
 	# Sends position on rail, angle of the camera head and number of images taken
-	def transmitPositionMessage(self, position, angle, images,heading,tilt):
+	def transmitPositionMessage(self, position, angle, images,heading,tilt,temp,volt):
 		message = "{\n"
 		message = message + "\"contextElements\": [\n\t{\n\t"
 		message = message + self.getDollyIDField()+",\n"
@@ -177,6 +195,16 @@ class MessageBroker:
 		message = message + "\t\t\t\"name\":\"images\",\n"
 		message = message + "\t\t\t\"type\":\"integer\",\n"
 		message = message + "\t\t\t\"value\":\""+str(images)+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"temp\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+str(temp)+"\"\n"
+		message = message + "\t\t},\n"
+		message = message + "\t\t{\n"
+		message = message + "\t\t\t\"name\":\"volt\",\n"
+		message = message + "\t\t\t\"type\":\"integer\",\n"
+		message = message + "\t\t\t\"value\":\""+str(volt)+"\"\n"
 		message = message + "\t\t}\n"
 		message = message + "\t],\n"
 		message = message + "\t\"creDate\":\""+self.getTimeStamp()+"\"\n"

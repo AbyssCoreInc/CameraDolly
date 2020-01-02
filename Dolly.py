@@ -7,7 +7,10 @@ import Adafruit_LSM303
 import RPi.GPIO as GPIO
 from adafruit_motorkit import MotorKit
 from adafruit_motor import stepper as STEPPER
-
+import board
+import busio
+import adafruit_ads1x15.ads1115 as ADS
+from adafruit_ads1x15.analog_in import AnalogIn
 
 class Dolly:
 	LINEAR         = 0
@@ -15,8 +18,7 @@ class Dolly:
 	LINEARANGLULAR = 2
 	LOCKLINEAR     = 3
 	LOCKANGLULAR   = 4
-	
-	
+
 	def __init__(self, configuration,motorhat):
 		# create a default object, no changes to I2C address or frequency
 		GPIO.setmode(GPIO.BCM)
@@ -25,7 +27,7 @@ class Dolly:
 		GPIO.add_event_detect(26, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
 		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
 		self.lsm303 = Adafruit_LSM303.LSM303()
-		
+
 		self.mkit = MotorKit(address=0x66)
 
 		self.config = configuration
@@ -34,21 +36,21 @@ class Dolly:
 
 		self.myStepper1 = self.mkit.stepper1
 		self.myStepper2 = self.mkit.stepper2
-	
+
 		self.interval = self.config.getDefInterval()
-		
+
 		self.xdist = 0
 		self.ydist = 0
 		self.mode  = Dolly.LINEAR
-		
+
 		self.atTheEnd = 0
 		self.atTheStart = 0
-		
+
 		self.pitch = self.config.getLinearPitch()
 		self.teeth = self.config.getLinearTeeth()
-		
+
 		self.declination = 0.0
-	
+
 		self.stepcount = 0
 		self.anglecount = 0
 		self.numsteps = self.config.getStepsPerFrame()
@@ -57,8 +59,16 @@ class Dolly:
 		self.style = STEPPER.DOUBLE
 		self.angleteeth = self.config.getAngularTeeth()
 		self.anglestepsperteeth = self.config.getAngularStepsPerTeeth()
-	
-	
+
+		i2c = busio.I2C(board.SCL, board.SDA)
+		self.adc = ADS.ADS1115(i2c)
+		self.adc.gain = 1
+		self.chanS1 = AnalogIn(self.adc, ADS.P0)
+		self.chanS2 = AnalogIn(self.adc, ADS.P1)
+		self.mvoltage = 3300
+		self.adcMAX = 32767
+
+
 	def startCallback(self,channel):
 		print("falling edge detected on 21")
 		self.atTheStart = 1
@@ -68,23 +78,22 @@ class Dolly:
 		print("falling edge detected on 26")
 		self.atTheStart = 0
 		self.atTheEnd = 1
-	
+
 	#recommended for auto-disabling motors on shutdown!
 	def turnOffMotors(self):
 		kit.stepper1.release()
 		kit.stepper2.release()
-		
-	
+
 	def moveDolly(self):
 		if (self.mode == Dolly.LINEAR):
 			self.stepDolly(self.numsteps)
 			self.stepcount = self.stepcount+self.numsteps
-				
+
 		if (self.mode == Dolly.ANGULAR):
 			print("self.mode == Dolly.ANGULAR")
 			self.rotateHead(self.anglesteps)
 			self.anglecount = self.anglecount+self.anglesteps
-		
+
 		if (self.mode == Dolly.LINEARANGLULAR):
 			print("self.mode == Dolly.LINEARANGLULAR")
 			self.rotateHead(self.anglesteps)
@@ -107,7 +116,6 @@ class Dolly:
 			print("LOCKANGLULAR stepstomove = "+str(stepstomove))
 			self.stepDolly(stepstomove)
 			self.stepcount = self.stepcount+stepstomove
-			
 			self.rotateHead(self.anglesteps)
 			self.anglecount = self.anglecount+self.anglesteps
 
@@ -126,13 +134,12 @@ class Dolly:
 			print("stepDolly BACKWARD")
 			#self.myStepper1.step(steps, self.direction, self.style)
 			#check if GPIO is cleared and clear the flag
-			
 			while (count < steps):
 				self.myStepper1.onestep(direction=self.direction, style=self.style)
 				if(GPIO.input(26) is False):
 					self.atTheEnd = 0
 				count = count + 1
-	
+
 	def rotateHead(self,steps):
 		print("rotateHead"+str(steps))
 		count = 0
@@ -145,7 +152,7 @@ class Dolly:
 			self.myStepper2.onestep(direction=dir, style=self.style)
 			count = count + 1
 		self.myStepper2.release()
-        
+
 	def calculateLinearSteps(self):
 		if (self.mode == Dolly.LOCKANGLULAR):
 			#determine X position
@@ -156,11 +163,11 @@ class Dolly:
 			delta  = alpha - self.angleStepsToRad(self.anglesteps)
 			# determine how much x_component need to be moved
 			print("calculateLinearSteps x_comp:"+str(x_comp)+" alpha:"+str(alpha)+" delta:"+str(delta))
-			
+
 			return self.distanceToStepsM(math.tan(delta)*y_comp)
 		else:
 			return 0
-				
+
 	def calculateAngularSteps(self):
 		if (self.mode == Dolly.LOCKLINEAR):
 			# position where we start
@@ -171,7 +178,7 @@ class Dolly:
 			x_delta = self.xdist-self.stepsToDistanceM(self.stepcount+self.numsteps)
 			#x_delta =
 			delta  = alpha - math.atan(x_delta/y_comp)
-			
+
 			steps = self.radiansToSteps(delta)
 			# atan does not preserve positive so alter that manually if x_comp is negative
 			#if (x_comp < 0):
@@ -181,6 +188,15 @@ class Dolly:
 			return steps
 		else:
 			return 0
+	def getTemp(self):
+		valueS1 = self.chanS1.value
+		S1voltage = (valueS1/self.adcMAX)*self.mvoltage
+		return S1voltage
+
+	def getVoltage(self):
+                value = self.chanS2.value
+                voltage = (value/self.adcMAX)*self.mvoltage
+                return voltage
 
 	# retuns linear position of the dolly in millimeters
 	def getPositionMM(self):
@@ -189,10 +205,23 @@ class Dolly:
 		result = float(self.stepcount)*(float(pitch*teeth)/float(self.stepsPerRev))
 		print("Dolly.getPositionMM = "+str(result))
 		return result
-	
+
 	def setDeclination(self,dec):
 		self.declination = dec
-	
+
+	def rotateCCW(self):
+		count = 0
+		while (count < 200):
+			self.myStepper2.onestep(direction=STEPPER.FORWARD, style=self.style)
+			count = count + 1
+	def rotateCCW(self):
+		count = 0
+		while (count < 200):
+			self.myStepper2.onestep(direction=STEPPER.BACKWARD, style=self.style)
+			count = count + 1
+	def headOff(self):
+		kit.stepper2.release()
+
 	def getPositionM(self):
 		return self.getPositionMM()/1000.0
 
@@ -202,7 +231,7 @@ class Dolly:
 		ditance = (self.numsteps*self.pitch*self.teeth)/self.stepsPerRev
 		#print("Dolly.getStepSizeMM = " + str(ditance))
 		return ditance
-	
+
 	def getAngleDeg(self):
 		steps = self.config.getAngularStepsPerTeeth()
 		return float(self.anglecount)*float(360.0/(self.angleteeth*steps))
@@ -224,7 +253,6 @@ class Dolly:
 			self.running = 0
 			self.linearHome()
 			self.anglularHome()
-		
 		self.mode = mode
 
 	def getOperationMode(self):
@@ -237,22 +265,22 @@ class Dolly:
 	# units meters
 	def setTrackingY(self,ydist):
 		self.ydist = ydist
-	
+
 	def getTrackingY(self):
 		return self.ydist
-	
+
 	def getTrackingX(self):
 		return self.xdist
 
 	# units meters
 	def setStepDistance(self,dist):
 		self.numsteps = self.distanceToStepsMM(dist)
-	
+
 	# units meters
 	def setStepAngle(self,angle):
 		self.anglesteps = int(self.radiansToSteps(math.radians(angle)))
 		print("setStepAngle "+str(angle)+" -> "+str(self.anglesteps))
-	
+
 	# Move andular axis to home and set counter to zero
 	def anglularHome(self):
 		if (self.direction == STEPPER.BACKWARD):
