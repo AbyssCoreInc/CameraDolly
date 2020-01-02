@@ -99,7 +99,18 @@ class Camera:
 		print("current aperture: ",str(self.aperture))
 
 	def setShutterSpeedIndx(self,index):
-		self.setShutterSpeed(self.shutterspeed[index])
+		self.setShutterSpeed(self.shutterspeeds[index])
+	def getShutterSpeedIndx(self):
+		return self.shutterspeeds.index(self.shutterspeed)
+	def getShutterSpeedList(self):
+		retval = ""
+		index = 0
+		while (index < len(self.shutterspeeds)):
+			retval = retval + self.shutterspeeds[index]
+			index = index + 1
+			if (index < len(self.shutterspeeds)):
+				retval = retval + ","
+		return retval
 	
 	def setShutterSpeed(self,speed):
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'shutterspeed2'))
@@ -112,6 +123,17 @@ class Camera:
 	
 	def setApertureIndx(self,index):
 		self.setAperture(self.apertures[index])
+	def getApertureIndx(self):
+		return self.apertures.index(self.aperture)
+	def getApertureList(self):
+		retval = ""
+		index = 0
+		while (index < len(self.appertures)):
+			retval = retval + self.appertures[index]
+			index = index + 1
+			if (index < len(self.appertures)):
+				retval = retval + ","
+		return retval
 	
 	def setAperture(self,aperture):
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'f-number'))
@@ -124,6 +146,17 @@ class Camera:
 	
 	def setISOIndx(self, index):
 		self.setISO(self.isos[index])
+	def getISOIndx(self):
+		return self.isos.index(self.iso)
+	def getISOList(self):
+		retval = ""
+		index = 0
+		while (index < len(self.isos)):
+			retval = retval + self.isos[index]
+			index = index + 1
+			if (index < len(self.isos)):
+				retval = retval + ","
+		return retval
 	
 	def setISO(self,iso):
 		capture_target = gp.check_result(gp.gp_widget_get_child_by_name(self.camconfig, 'iso'))
