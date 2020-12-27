@@ -16,11 +16,9 @@ class Tester:
 		self.myMotor3 = self.mh.getMotor(4)      #  Head Motor on channel 4
 		self.myMotor3.setSpeed(255)
 
-		i2c = busio.I2C(board.SCL, board.SDA)
-		self.adc = ADS.ADS1115(i2c)
+#		self.adc = ADS.ADS1115(i2c)
 		self.GAIN = 1
 		self.AMP = 25
-#		self.adc.gain = self.GAIN
 
 
 	def go(self,direction):
