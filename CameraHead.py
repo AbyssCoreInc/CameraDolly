@@ -36,3 +36,17 @@ class LensHeater:
 
 	def setDeclination(self,dec):
 		self.declination = dec
+
+	def rotateHead(self,steps):
+		print("rotateHead"+str(steps))
+		self.head.rotate(
+		count = 0
+		if (steps < 0):
+			dir = STEPPER.FORWARD
+			steps = steps * -1
+		else:
+			dir = STEPPER.BACKWARD
+		while (count < steps):
+			self.myStepper2.onestep(direction=dir, style=self.style)
+			count = count + 1
+			self.myStepper2.release()
