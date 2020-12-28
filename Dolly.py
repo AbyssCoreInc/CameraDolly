@@ -5,8 +5,9 @@ from Configuration import *
 from MessageBroker import *
 import Adafruit_LSM303
 import RPi.GPIO as GPIO
-from adafruit_motorkit import MotorKit
-from adafruit_motor import stepper as STEPPER
+#from adafruit_motorkit import MotorKit
+#from adafruit_motor import stepper as STEPPER
+from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 
@@ -58,12 +59,10 @@ class Dolly:
 		self.anglecount = 0
 		self.numsteps = self.config.getStepsPerFrame()
 		self.anglesteps = 0  # steps to rotate camera per frame (used in LocAngular and Anglular modes)
-		self.direction = STEPPER.FORWARD
-		self.style = STEPPER.DOUBLE
+		self.direction = Adafruit_MotorHAT.FORWARD
 		self.angleteeth = self.config.getAngularTeeth()
 		self.anglestepsperteeth = self.config.getAngularStepsPerTeeth()
 
-		i2c = busio.I2C(board.SCL, board.SDA)
 		self.adc = ADS.ADS1115(i2c)
 		self.adc.gain = 1
 		self.chanS1 = AnalogIn(self.adc, ADS.P0)
