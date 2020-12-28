@@ -3,7 +3,8 @@ import time
 import math
 from Configuration import *
 from MessageBroker import *
-import Adafruit_LSM303
+#import Adafruit_LSM303
+from LIS3DH import LIS3DH
 import RPi.GPIO as GPIO
 #from adafruit_motorkit import MotorKit
 #from adafruit_motor import stepper as STEPPER
@@ -24,8 +25,10 @@ class Dolly:
 		GPIO.setup(21, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		#GPIO.add_event_detect(26, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
 		#GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
-		self.lsm303 = Adafruit_LSM303.LSM303(busnum=0)
-		
+		#self.lsm303 = Adafruit_LSM303.LSM303(busnum=0)
+		self.IMU = LIS3DH(debug=True)
+		self.IMU.setRange(LIS3DH.RANGE_2G)
+
 		self.mkit = MotorKit(i2c_bus=0)
 		self.config = configuration
 		self.running = 0
@@ -324,10 +327,9 @@ class Dolly:
 		return int((dist)/(((teeth*pitch)/self.stepsPerRev)))
 
 	def getHeadAlignment(self):
-		accel, mag = self.lsm303.read()
-		accel_x, accel_y, accel_z = accel
-		mag_x, mag_y, mag_z = mag
-		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
+		accel_x = sensor.getX()
+		accel_z = sensor.getZ()
+		print('Accel X={0}, Accel Z={1}'.format(accel_x, accel_z))
 	
 	def setInterval(self,inter):
 		self.interval = inter
