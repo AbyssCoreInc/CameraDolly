@@ -8,8 +8,7 @@ import RPi.GPIO as GPIO
 #from adafruit_motorkit import MotorKit
 #from adafruit_motor import stepper as STEPPER
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-import adafruit_ads1x15.ads1115 as ADS
-from adafruit_ads1x15.analog_in import AnalogIn
+import Adafruit_ADS1x15
 
 class Dolly:
 	LINEAR         = 0
@@ -63,10 +62,10 @@ class Dolly:
 		self.angleteeth = self.config.getAngularTeeth()
 		self.anglestepsperteeth = self.config.getAngularStepsPerTeeth()
 
-		self.adc = ADS.ADS1115(i2c)
+		self.adc = Adafruit_ADS1x15.ADS1015(address=0x48, busnum=0) # banana pi
 		self.adc.gain = 1
-		self.chanS1 = AnalogIn(self.adc, ADS.P0)
-		self.chanS2 = AnalogIn(self.adc, ADS.P1)
+		#self.chanS1 = AnalogIn(self.adc, ADS.P0)
+		#self.chanS2 = AnalogIn(self.adc, ADS.P1)
 		self.mvoltage = 3300
 		self.adcMAX = 32767
 
@@ -123,7 +122,7 @@ class Dolly:
 
 	def stepDolly(self,steps):
 		count = 0
-		if (self.direction == STEPPER.FORWARD and self.atTheEnd == 0):
+		if (self.direction == Adafruit_MotorHAT.FORWARD and self.atTheEnd == 0):
 			print("stepDolly FORWARD")
 			#self.myStepper1.step(steps, self.direction, self.style)
 			while (count < steps):
@@ -132,7 +131,7 @@ class Dolly:
 				if(GPIO.input(21) is False):
 					self.atTheStart = 0
 				count = count + 1
-		if (self.direction == STEPPER.BACKWARD and self.atTheStart == 0):
+		if (self.direction == Adafruit_MotorHAT.BACKWARD and self.atTheStart == 0):
 			print("stepDolly BACKWARD")
 			#self.myStepper1.step(steps, self.direction, self.style)
 			#check if GPIO is cleared and clear the flag
@@ -165,7 +164,6 @@ class Dolly:
 			delta  = alpha - self.angleStepsToRad(self.anglesteps)
 			# determine how much x_component need to be moved
 			print("calculateLinearSteps x_comp:"+str(x_comp)+" alpha:"+str(alpha)+" delta:"+str(delta))
-
 			return self.distanceToStepsM(math.tan(delta)*y_comp)
 		else:
 			return 0
@@ -180,7 +178,6 @@ class Dolly:
 			x_delta = self.xdist-self.stepsToDistanceM(self.stepcount+self.numsteps)
 			#x_delta =
 			delta  = alpha - math.atan(x_delta/y_comp)
-
 			steps = self.radiansToSteps(delta)
 			# atan does not preserve positive so alter that manually if x_comp is negative
 			#if (x_comp < 0):
@@ -191,12 +188,13 @@ class Dolly:
 		else:
 			return 0
 	def getTemp(self):
-		valueS1 = self.chanS1.value
+		
+		valueS1 = adc.read_adc(0, gain=self.gain)
 		S1voltage = (valueS1/self.adcMAX)*self.mvoltage
 		return S1voltage
 
 	def getVoltage(self):
-		value = self.chanS2.value
+		value = adc.read_adc(1, gain=self.gain)
 		voltage = (value/self.adcMAX)*self.mvoltage
 		return voltage
 
@@ -211,13 +209,13 @@ class Dolly:
 	def rotateCCW(self):
 		count = 0
 		while (count < 200):
-			self.myStepper2.onestep(direction=STEPPER.FORWARD, style=self.style)
+			self.myStepper2.onestep(direction=Adafruit_MotorHAT.FORWARD, style=self.style)
 			count = count + 1
 
 	def rotateCCW(self):
 		count = 0
 		while (count < 200):
-			self.myStepper2.onestep(direction=STEPPER.BACKWARD, style=self.style)
+			self.myStepper2.onestep(direction=Adafruit_MotorHAT.BACKWARD, style=self.style)
 			count = count + 1
 	def headOff(self):
 		kit.stepper2.release()
@@ -284,9 +282,9 @@ class Dolly:
 	# Move andular axis to home and set counter to zero
 	def anglularHome(self):
 		if (self.direction == STEPPER.BACKWARD):
-			self.myStepper1.step(self.stepcount, STEPPER.FORWARD, self.style)
+			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.FORWARD, self.style)
 		else:
-			self.myStepper1.step(self.stepcount, STEPPER.BACKWARD, self.style)
+			self.myStepper1.step(self.stepcount, Adafruit_MotorHAT.BACKWARD, self.style)
 		self.anglestepcount = 0
 		self.running = 0
 
@@ -346,11 +344,11 @@ class Dolly:
 		self.stop()
 		print("gotoEnd: stopped, now seeking end")
 		#move dolly until oneof the interrupts fires
-		self.direction = STEPPER.FORWARD
+		self.direction = Adafruit_MotorHAT.FORWARD
 		while(self.atTheEnd == 0):
 			self.stepDolly(self.numsteps)
 			self.stepcount = self.stepcount+self.numsteps
-		self.direction = STEPPER.BACKWARD
+		self.direction = Adafruit_MotorHAT.BACKWARD
 		print("gotoEnd: ready")
 		self.stepcount = 0
 		self.running = 0
