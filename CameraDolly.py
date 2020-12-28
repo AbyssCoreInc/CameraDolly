@@ -20,7 +20,7 @@ counter = 0
 # create empty threads (these will hold the stepper 1 and 2 threads)
 st1 = threading.Thread()
 
-mh = Adafruit_MotorHAT()
+mh = Adafruit_MotorHAT(i2c_bus=0)
 #atexit.register(turnOffMotors)
 
 def initiateThreads(datatrans,lensheater,configuration):
