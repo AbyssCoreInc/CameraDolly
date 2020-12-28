@@ -7,8 +7,6 @@ import Adafruit_LSM303
 import RPi.GPIO as GPIO
 from adafruit_motorkit import MotorKit
 from adafruit_motor import stepper as STEPPER
-import board
-import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 
@@ -27,16 +25,21 @@ class Dolly:
 		GPIO.add_event_detect(26, GPIO.FALLING, callback=self.endCallback, bouncetime=300)
 		GPIO.add_event_detect(21, GPIO.FALLING, callback=self.startCallback, bouncetime=300)
 		self.lsm303 = Adafruit_LSM303.LSM303()
-
-		self.mkit = MotorKit(address=0x66)
-
+		
+		self.mkit = MotorKit(i2c_bus=0)
 		self.config = configuration
 		self.running = 0
-		self.stepsPerRev = self.config.getStepsPerRev()
 
-		self.myStepper1 = self.mkit.stepper1
+		self.myMotor1 = self.mh.getMotor(2)
 		self.myStepper2 = self.mkit.stepper2
 
+		# 2mm pitch timing belt.
+		# Motor speed full throttle 30rpm
+		# grey code encoder 12 positions 20 teeth roll => 40mm per rev
+		# 3.33mm per tick
+		# Speed is (1200mm / minute) -> (20mm / sec) -> (166 msec / tick)
+		#
+		
 		self.interval = self.config.getDefInterval()
 
 		self.xdist = 0
@@ -194,9 +197,9 @@ class Dolly:
 		return S1voltage
 
 	def getVoltage(self):
-                value = self.chanS2.value
-                voltage = (value/self.adcMAX)*self.mvoltage
-                return voltage
+		value = self.chanS2.value
+		voltage = (value/self.adcMAX)*self.mvoltage
+		return voltage
 
 	# retuns linear position of the dolly in millimeters
 	def getPositionMM(self):
@@ -206,14 +209,12 @@ class Dolly:
 		print("Dolly.getPositionMM = "+str(result))
 		return result
 
-	def setDeclination(self,dec):
-		self.declination = dec
-
 	def rotateCCW(self):
 		count = 0
 		while (count < 200):
 			self.myStepper2.onestep(direction=STEPPER.FORWARD, style=self.style)
 			count = count + 1
+
 	def rotateCCW(self):
 		count = 0
 		while (count < 200):
@@ -301,6 +302,7 @@ class Dolly:
 	
 	def angleStepsToRad(self,steps):
 		return steps * math.radians(360/(self.angleteeth*self.anglestepsperteeth))
+
 	def radiansToSteps(self,rads):
 		return rads/math.radians(360/(self.angleteeth*self.anglestepsperteeth))
 	
@@ -323,32 +325,16 @@ class Dolly:
 		pitch = self.config.getLinearPitch()
 		teeth = self.config.getLinearTeeth()
 		return int((dist)/(((teeth*pitch)/self.stepsPerRev)))
+
 	def getHeadAlignment(self):
 		accel, mag = self.lsm303.read()
 		accel_x, accel_y, accel_z = accel
 		mag_x, mag_y, mag_z = mag
 		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
-	def getHeading(self):
-		accel, mag = self.lsm303.read()
-		accel_x, accel_y, accel_z = accel
-		mag_x, mag_y, mag_z = mag
-		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
-		compassHeadin = 0
-		if (mag_x != 0):
-			compassHeadin = math.atan(mag_y/mag_x)
-		return compassHeadin
-
-	def getTilt(self):
-		accel, mag = self.lsm303.read()
-		accel_x, accel_y, accel_z = accel
-		mag_x, mag_y, mag_z = mag
-		print('Accel X={0}, Accel Y={1}, Accel Z={2}, Mag X={3}, Mag Y={4}, Mag Z={5}'.format(accel_x, accel_y, accel_z, mag_x, mag_y, mag_z))
-		tilt = 0
-		if (accel_z != 0):
-			tilt = math.atan(accel_x/accel_z)
-		return tilt
+	
 	def setInterval(self,inter):
 		self.interval = inter
+
 	def getInterval(self):
 		return self.interval
 
