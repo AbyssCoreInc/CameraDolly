@@ -4,7 +4,7 @@ from MessageBroker import *
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
 from LIS3DH import LIS3DH
 
-class LensHeater:
+class CameraHead:
 	def __init__(self, motorhat,config):
 		self.mh = Adafruit_MotorHAT(i2c_bus=0)
 		self.IMU = LIS3DH(debug=True)
