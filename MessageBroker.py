@@ -130,8 +130,8 @@ class MessageBroker:
 			self.dolly.head.getTilt()
 		if (msg == "level_horizon"):
 			self.dolly.head.levelHeadHorizon()
-		if (msg == "level_eaxis"):
-			self.dolly.head.alignEarthAxis()
+		if (msg == "align_axis"):
+			self.dolly.head.alignEarthAxis(setting)
 
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)

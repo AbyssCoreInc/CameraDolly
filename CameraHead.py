@@ -15,7 +15,9 @@ class CameraHead:
 		self.tiltMotor.setSpeed(255)
 		self.rotateMotor = self.mh.getMotor(4)      #  Head Motor on channel 4
 		self.rotateMotor.setSpeed(255)
-		self.levelMargin = 0.0174533
+		#self.levelMargin = 0.0174533 # 1° in radians
+		self.levelMargin = 0.00436333 # 0.5° in radians
+		self.alignMargin = 0.00872665 # 0.5°
 	
 	def setMessageBroker(self,messagebroker):
 		self.mBroker = messagebroker
@@ -86,11 +88,12 @@ class CameraHead:
 			tilt = self.getTilt()
 		print("Horizon leveled")
 				
-	def alignEarthAxis(self):
+	def alignEarthAxis(self,latitude): # radians
 		tilt = self.getTilt()
-		print("alignEarthAxis: "+str(tilt))
-		while(tilt > math.abs(self.levelMargin)):
-			if (tilt < 0):
+		targetAngle = 1.5708 - latitude
+		print("alignEarthAxis: delta "+str(targetAngle-tilt))
+		while(math.abs(targetAngle-tilt) > self.alignMargin):
+			if (tilt < targetAngle):
 				self.tiltHead(dir=Adafruit_MotorHAT.FORWARD)
 			else:
 				self.tiltHead(dir=Adafruit_MotorHAT.BACKWARD)
