@@ -94,7 +94,7 @@ class CameraHead:
 		targetAngle = float(latitude)
 		
 		while(math.fabs(tilt-targetAngle) > self.alignMargin):
-			print("alignEarthAxis: delta "+str(math.fabs(targetAngle-tilt)))
+			print("alignEarthAxis: delta "+str(math.fabs(targetAngle-tilt))+" tilt: "+tilt+" target: "+targetAngle)
 			if (tilt < targetAngle):
 				self.tiltHead(dir=Adafruit_MotorHAT.FORWARD)
 			else:
