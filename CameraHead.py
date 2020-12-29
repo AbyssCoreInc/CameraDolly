@@ -59,6 +59,7 @@ class CameraHead:
 		self.tiltMotor.run(dir)
 		time.sleep(delay)
 		self.rotateMotor.run(Adafruit_MotorHAT.RELEASE)
+		time.sleep(delay*10)
 
 	def rotateCW(self):
 		self.rotateMotor.run(Adafruit_MotorHAT.FORWARD)
@@ -76,8 +77,8 @@ class CameraHead:
 
 	def levelHeadHorizon(self):
 		tilt = self.getTilt()
-		print("levelHeadHorizon: "+str(math.fabs(tilt))+" margin: "+str(self.levelMargin))
 		while(math.fabs(tilt) > self.levelMargin):
+			print("levelHeadHorizon: "+str(math.fabs(tilt))+" margin: "+str(self.levelMargin))
 			if (tilt < 0):
 				self.tiltHead(dir=Adafruit_MotorHAT.FORWARD)
 			else:
