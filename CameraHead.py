@@ -18,7 +18,7 @@ class CameraHead:
 	def setMessageBroker(self,messagebroker):
 		self.mBroker = messagebroker
 	
-	def worker(self):
+	#	def worker(self):
 
 	def getHeading(self):
 		accel, mag = self.lsm303.read()
