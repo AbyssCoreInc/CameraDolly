@@ -11,8 +11,8 @@ def clickcallback(channel):
 	print("Click detected (0x%2X)" % (click))
 	if (click & 0x10):
 		print(" single click")
-			if (click & 0x20):
-				print(" double click")
+	if (click & 0x20):
+		print(" double click")
 
 
 if __name__ == '__main__':
@@ -24,15 +24,15 @@ if __name__ == '__main__':
 	# s2 = LIS3DH(address=0x19, debug=True)
 	
 	print("Starting stream")
-		while True:
+	while True:
 
-x = sensor.getX()
-y = sensor.getY()
-z = sensor.getZ()
+		x = sensor.getX()
+		y = sensor.getY()
+		z = sensor.getZ()
 
-# raw values
-print("\rX: %.6f\tY: %.6f\tZ: %.6f" % (x, y, z))
-	sleep(0.1)
+		# raw values
+		print("\rX: %.6f\tY: %.6f\tZ: %.6f" % (x, y, z))
+		sleep(0.1)
 
 # click sensor if polling & not using interrupt
 #        click = sensor.getClick()
