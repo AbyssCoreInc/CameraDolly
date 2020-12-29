@@ -58,7 +58,7 @@ class CameraHead:
 		self.tiltMotor.setSpeed(speed)
 		self.tiltMotor.run(dir)
 		time.sleep(delay)
-		self.rotateMotor.run(Adafruit_MotorHAT.RELEASE)
+		self.tiltMotor.run(Adafruit_MotorHAT.RELEASE)
 		time.sleep(delay*10)
 
 	def rotateCW(self):
