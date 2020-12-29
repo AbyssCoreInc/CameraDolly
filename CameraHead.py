@@ -82,6 +82,7 @@ class CameraHead:
 				self.tiltHead(dir=Adafruit_MotorHAT.FORWARD)
 			else:
 				self.tiltHead(dir=Adafruit_MotorHAT.BACKWARD)
+			tilt = self.getTilt()
 		print("Horizon leveled")
 				
 	def alignEarthAxis(self):
@@ -92,3 +93,4 @@ class CameraHead:
 				self.tiltHead(dir=Adafruit_MotorHAT.FORWARD)
 			else:
 				self.tiltHead(dir=Adafruit_MotorHAT.BACKWARD)
+			tilt = self.getTilt()
