@@ -29,7 +29,8 @@ class Dolly:
 		self.IMU = LIS3DH(debug=True)
 		self.IMU.setRange(LIS3DH.RANGE_2G)
 
-		self.mkit = Adafruit_MotorHAT(i2c_bus=0)
+		#self.mh = Adafruit_MotorHAT(i2c_bus=0)
+		self.mh = motorhat
 		self.config = configuration
 		self.running = 0
 
