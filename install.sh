@@ -1,7 +1,7 @@
 #!/bin/sh
 
-apt-get install gphoto2
-apt-get install libgphoto2-dev
+apt-get -y install gphoto2
+apt-get -y install libgphoto2-dev
 
 
 pip3 install gphoto2
