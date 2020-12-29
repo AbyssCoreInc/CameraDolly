@@ -91,7 +91,7 @@ class CameraHead:
 	def alignEarthAxis(self,latitude): # radians
 		tilt = self.getTilt()
 		#targetAngle = 1.5708 - float(latitude)
-		targetAngle = latitude
+		targetAngle = float(latitude)
 		print("alignEarthAxis: delta "+str(targetAngle-tilt))
 		while(math.fabs(targetAngle-tilt) > self.alignMargin):
 			if (tilt < targetAngle):
