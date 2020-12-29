@@ -36,8 +36,7 @@ class Dolly:
 
 		self.myMotor1 = self.mh.getMotor(2)      # Linear movement motor
 		self.myMotor1.setSpeed(255)
-		self.myStepper2 = self.mkit.stepper2
-
+		
 		# 2mm pitch timing belt.
 		# Motor speed full throttle 30rpm
 		# grey code encoder 12 positions 20 teeth roll => 40mm per rev
@@ -193,20 +192,6 @@ class Dolly:
 		result = float(self.stepcount)*(float(pitch*teeth)/float(self.stepsPerRev))
 		print("Dolly.getPositionMM = "+str(result))
 		return result
-
-	def rotateCCW(self):
-		count = 0
-		while (count < 200):
-			self.myStepper2.onestep(direction=Adafruit_MotorHAT.FORWARD, style=self.style)
-			count = count + 1
-
-	def rotateCCW(self):
-		count = 0
-		while (count < 200):
-			self.myStepper2.onestep(direction=Adafruit_MotorHAT.BACKWARD, style=self.style)
-			count = count + 1
-	def headOff(self):
-		kit.stepper2.release()
 
 	def getPositionM(self):
 		return self.getPositionMM()/1000.0

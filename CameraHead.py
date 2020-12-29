@@ -2,12 +2,18 @@ import time
 from Configuration import *
 from MessageBroker import *
 from Adafruit_MotorHAT import Adafruit_MotorHAT, Adafruit_DCMotor
-import Adafruit_LSM303
+from LIS3DH import LIS3DH
 
 class LensHeater:
 	def __init__(self, motorhat,config):
 		self.mh = Adafruit_MotorHAT(i2c_bus=0)
-		self.lsm303 = Adafruit_LSM303.LSM303()
+		self.IMU = LIS3DH(debug=True)
+		self.IMU.setRange(LIS3DH.RANGE_2G)
+		self.mh = motorhat
+		self.tiltMotor = self.mh.getMotor(1)      # Head Tilt motor
+		self.tiltMotor.setSpeed(255)
+		self.rotateMotor = self.mh.getMotor(4)      #  Head Motor on channel 4
+		self.rotateMotor.setSpeed(255)
 	
 	def setMessageBroker(self,messagebroker):
 		self.mBroker = messagebroker
@@ -37,16 +43,21 @@ class LensHeater:
 	def setDeclination(self,dec):
 		self.declination = dec
 
-	def rotateHead(self,steps):
-		print("rotateHead"+str(steps))
-		self.head.rotate(
-		count = 0
-		if (steps < 0):
-			dir = STEPPER.FORWARD
-			steps = steps * -1
-		else:
-			dir = STEPPER.BACKWARD
-		while (count < steps):
-			self.myStepper2.onestep(direction=dir, style=self.style)
-			count = count + 1
-			self.myStepper2.release()
+	def rotateHead(self,speed=255,dir=Adafruit_MotorHAT.FORWARD):
+		print("rotateHead"+str(speed))
+		self.rotateMotor.setSpeed(speed)
+		self.rotateMotor.run(dir)
+
+	def rotateCW(self):
+		self.rotateMotor.run(Adafruit_MotorHAT.FORWARD)
+		time.sleep(self.rotateTick)
+		self.rotateMotor.run(Adafruit_MotorHAT.RELEASE)
+						 
+	def rotateCCW(self):
+		self.rotateMotor.run(Adafruit_MotorHAT.BACKWARD)
+		time.sleep(self.rotateTick)
+		self.rotateMotor.run(Adafruit_MotorHAT.RELEASE)
+						 
+	def headOff(self):
+		self.rotateMotor.run(Adafruit_MotorHAT.RELEASE)
+		self.rotateMotor.run(Adafruit_MotorHAT.RELEASE)

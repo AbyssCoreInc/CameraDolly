@@ -2,10 +2,37 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../Adafruit_MotorHAT">
+      location = "group:../CameraHead.py">
+   </FileRef>
+   <FileRef
+      location = "group:../Camera.py">
+   </FileRef>
+   <FileRef
+      location = "group:../cameradolly.json">
    </FileRef>
    <FileRef
       location = "group:../CameraDolly.py">
+   </FileRef>
+   <FileRef
+      location = "group:../Configuration.py">
+   </FileRef>
+   <FileRef
+      location = "group:../DC_Test.py">
+   </FileRef>
+   <FileRef
+      location = "group:../Dolly.py">
+   </FileRef>
+   <FileRef
+      location = "group:../LensHeater.py">
+   </FileRef>
+   <FileRef
+      location = "group:../MessageBroker.py">
+   </FileRef>
+   <FileRef
+      location = "group:../README.md">
+   </FileRef>
+   <FileRef
+      location = "group:../StepperTest.py">
    </FileRef>
    <FileRef
       location = "self:">
