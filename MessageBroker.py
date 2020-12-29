@@ -116,15 +116,21 @@ class MessageBroker:
 			self.dolly.setInterval(float(setting))
 		if (msg == "rotateccw"):
 			print("on_message:rotate CCW ")
-			self.dolly.rotateCCW()
+			self.dolly.head.rotateCCW()
 		if (msg == "rotatecw"):
 			print("on_message:rotate CW ")
-			self.dolly.rotateCW()
+			self.dolly.head.rotateCW()
 		if (msg == "head_off"):
 			print("on_message:head off ")
-			self.dolly.headOff()
+			self.dolly.head.headOff()
 		if (msg == "rcamsettings"):
 			self.transmitCameraSettings()
+		if (msg == "get_head_angle"):
+			self.dolly.head.getTilt()
+		if (msg == "level_horizon"):
+			self.dolly.head.levelHeadHorizon()
+		if (msg == "level_eaxis"):
+			self.dolly.head.alignEarthAxis()
 
 	def connect(self):
 		print("DataTransmitter.connect connecting to mqtt broker ", self.mqtturl)
