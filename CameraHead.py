@@ -77,7 +77,7 @@ class CameraHead:
 	def levelHeadHorizon(self):
 		tilt = self.getTilt()
 		print("levelHeadHorizon: "+str(tilt))
-		while(tilt > math.abs(self.levelMargin)):
+		while(math.fabs(tilt) > self.levelMargin):
 			if (tilt < 0):
 				self.tiltHead(dir=Adafruit_MotorHAT.FORWARD)
 			else:
