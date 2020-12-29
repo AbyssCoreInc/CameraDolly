@@ -15,7 +15,7 @@ class CameraHead:
 		self.tiltMotor.setSpeed(255)
 		self.rotateMotor = self.mh.getMotor(4)      #  Head Motor on channel 4
 		self.rotateMotor.setSpeed(255)
-		self.levelMargin = 0.1
+		self.levelMargin = 0.0174533
 	
 	def setMessageBroker(self,messagebroker):
 		self.mBroker = messagebroker
@@ -59,7 +59,7 @@ class CameraHead:
 		self.tiltMotor.run(dir)
 		time.sleep(delay)
 		self.tiltMotor.run(Adafruit_MotorHAT.RELEASE)
-		time.sleep(delay*10)
+		time.sleep(delay*5)
 
 	def rotateCW(self):
 		self.rotateMotor.run(Adafruit_MotorHAT.FORWARD)
