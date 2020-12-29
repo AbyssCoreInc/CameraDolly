@@ -1,6 +1,6 @@
 {
 	"configuration": {
-		"mqtt_address":"mosquitto.org",
+		"mqtt_address":"127.0.0.1",
 		"mqtt_username":"foo",
 		"mqtt_password":"bar",
 		"mqtt_topic":"CameraDolly/",
