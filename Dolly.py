@@ -2,6 +2,7 @@ import logging
 import time
 import math
 from Configuration import *
+from CameraHead import *
 from MessageBroker import *
 #import Adafruit_LSM303
 from LIS3DH import LIS3DH
