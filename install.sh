@@ -11,3 +11,6 @@ pip3 install Adafruit_ADS1x15
 pip3 install pytz
 
 cp cameradolly.json /etc/
+cp cameradolly.service /etc/systemd/system/
+systemctl deamon-reload
+systemctl start cameradolly
