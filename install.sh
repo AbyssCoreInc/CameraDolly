@@ -13,6 +13,6 @@ pip3 install pytz
 
 cp cameradolly.json /etc/
 cp cameradolly.service /etc/systemd/system/
-systemctl deamon-reload
+systemctl daemon-reload
 systemctl start mosquitto
 systemctl start cameradolly
